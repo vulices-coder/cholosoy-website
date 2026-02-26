@@ -1,0 +1,46 @@
+:root {
+  /* ===== Neutral ===== */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* ===== Brand: Yellow (según Figma) ===== */
+  --yellow-100: #fff0b3;
+  --yellow-200: #f4d98c;
+  --yellow-900: #574500;
+
+  /* ===== Brand: Blue/Turquoise (según Figma) ===== */
+  --blue-500: #1ba8cb; /* primario (según tu captura) */
+  --blue-600: #68b7c2; /* variante vista antes (puede quedar como secundario) */
+
+  /* ===== Semantic ===== */
+  --color-bg: var(--yellow-100);
+  --color-surface: var(--color-white);
+  --color-text: var(--color-black);
+
+  --color-navbar-bg: var(--color-white);
+  --color-footer-bg: var(--yellow-200);
+
+  --color-accent: var(--blue-500);
+
+  /* ===== Layout sizes ===== */
+  --nav-height: 136px;
+  --footer-height: 72px;
+  --container-max: 1200px;
+
+  /* ===== Spacing ===== */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Footer padding (Figma) */
+  --footer-pad-x: 26px;
+  --footer-pad-y: 16px;
+
+  /* ===== Radius ===== */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}

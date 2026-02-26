@@ -1,0 +1,29 @@
+.nav {
+  height: var(--nav-height);
+  background: var(--color-navbar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-xl);
+}
+
+.links {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.logo {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}

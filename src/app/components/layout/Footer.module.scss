@@ -1,0 +1,19 @@
+.footer {
+  height: var(--footer-height);
+  background: var(--color-footer-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--footer-pad-y) var(--footer-pad-x);
+}
+
+.links {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.meta {
+  font-size: 12px;
+  opacity: 0.85;
+}

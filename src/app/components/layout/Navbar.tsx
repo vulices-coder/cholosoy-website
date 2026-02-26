@@ -1,23 +1,24 @@
 import Link from "next/link";
+import styles from "./Navbar.module.scss";
 
 export default function Navbar() {
   return (
-    <header>
-      <nav>
-        <Link href="/">CholoSoy</Link>
+    <header className={styles.nav}>
+      <Link className={styles.logo} href="/">
+        CholoSoy
+      </Link>
 
-        <div>
-          <Link href="/karte/vorspeisen">Karte</Link>
-          <Link href="/uber-uns">Über Uns</Link>
-          <Link href="/galerie">Galerie</Link>
-          <Link href="/veranstaltung">Veranstaltung</Link>
-          <Link href="/catering">Catering</Link>
-        </div>
-
-        <Link href="/kontakt" aria-label="Kontakt / Reservierung">
-          Avatar
-        </Link>
+      <nav className={styles.links}>
+        <Link href="/karte/vorspeisen">Karte</Link>
+        <Link href="/uber-uns">Über Uns</Link>
+        <Link href="/galerie">Galerie</Link>
+        <Link href="/veranstaltung">Veranstaltung</Link>
+        <Link href="/catering">Catering</Link>
       </nav>
+
+      <Link className={styles.avatar} href="/kontakt" aria-label="Kontakt / Reservierung">
+        🙂
+      </Link>
     </header>
   );
 }
