@@ -3,23 +3,23 @@
   --color-black: #000000;
   --color-white: #ffffff;
 
-  /* ===== Brand: Yellow (según Figma) ===== */
-  --yellow-100: #fff0b3;
-  --yellow-200: #f4d98c;
-  --yellow-900: #574500;
+  /* ===== Brand Yellow ===== */
+  --yellow-500: #ffe26f; /* principal */
+  --yellow-300: #f4d98c; /* suave */
+  --yellow-900: #574500; /* oscuro */
 
-  /* ===== Brand: Blue/Turquoise (según Figma) ===== */
-  --blue-500: #1ba8cb; /* primario (según tu captura) */
-  --blue-600: #68b7c2; /* variante vista antes (puede quedar como secundario) */
+  /* ===== Brand Blue/Turquoise ===== */
+  --blue-500: #1ba8cb; /* primario */
+  --blue-600: #68b7c2; /* variante */
 
   /* ===== Semantic ===== */
-  --color-bg: var(--yellow-100);
+  --color-bg: var(--yellow-500);
   --color-surface: var(--color-white);
   --color-text: var(--color-black);
+  --color-text-on-yellow: var(--yellow-900);
 
   --color-navbar-bg: var(--color-white);
-  --color-footer-bg: var(--yellow-200);
-
+  --color-footer-bg: var(--yellow-300);
   --color-accent: var(--blue-500);
 
   /* ===== Layout sizes ===== */
