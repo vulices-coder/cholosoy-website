@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/app/components/ui/Container";
 import Button from "@/app/components/ui/Button";
 import styles from "./Start.module.scss";
@@ -8,7 +9,15 @@ export default function StartPage() {
     <main className={styles.wrapper}>
       <Container size="lg">
         <div className={styles.inner}>
-          <div className={styles.logo}>CholoSoy</div>
+          <div className={styles.logo}>
+            <Image
+              src="/logo.svg"
+              alt="CholoSoy Logo"
+              width={200}
+              height={200}
+              priority
+            />
+          </div>
 
           <div className={styles.actions}>
             <Link href="/home">
