@@ -1,7 +1,26 @@
+import Link from "next/link";
+import Container from "@/app/components/ui/Container";
+import Button from "@/app/components/ui/Button";
+import styles from "./Start.module.scss";
+
 export default function StartPage() {
   return (
-    <main>
-      <h1>CholoSoy Startseite</h1>
+    <main className={styles.wrapper}>
+      <Container size="lg">
+        <div className={styles.inner}>
+          <div className={styles.logo}>CholoSoy</div>
+
+          <div className={styles.actions}>
+            <Link href="/home">
+              <Button variant="primary">Home</Button>
+            </Link>
+
+            <Link href="/kontakt">
+              <Button variant="ghost">Kontakt</Button>
+            </Link>
+          </div>
+        </div>
+      </Container>
     </main>
   );
 }

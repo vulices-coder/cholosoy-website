@@ -1,0 +1,25 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: var(--color-bg);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+  text-align: center;
+}
+
+.logo {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-lg);
+}
