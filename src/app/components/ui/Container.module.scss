@@ -1,0 +1,13 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+.md {
+  max-width: var(--container-max);
+}
+
+.lg {
+  max-width: 1440px; /* match del marco navbar */
+}
