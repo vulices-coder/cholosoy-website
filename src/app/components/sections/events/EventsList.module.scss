@@ -1,0 +1,27 @@
+.section {
+  padding: 24px 0 72px;
+  background: var(--color-surface);
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+  padding: 24px;
+  border-radius: 20px;
+  background: #f5f5f5;
+}
+
+.date {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
