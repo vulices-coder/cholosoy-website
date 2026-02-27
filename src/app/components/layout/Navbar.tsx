@@ -10,7 +10,7 @@ export default function Navbar() {
 
       <nav className={styles.links}>
         <Link href="/karte/vorspeisen">Karte</Link>
-        <Link href="/uber-uns">Über Uns</Link>
+        <Link href="/about">Über Uns</Link>
         <Link href="/galerie">Galerie</Link>
         <Link href="/veranstaltung">Veranstaltung</Link>
         <Link href="/catering">Catering</Link>
