@@ -1,0 +1,61 @@
+.section {
+  padding: 48px 0 72px;
+  background: var(--color-surface);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Horizontal scroll rail */
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 320px;
+  gap: 16px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding: 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  border-radius: 22px;
+}
+
+/* tarjetas */
+.card {
+  position: relative;
+  height: 200px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #eee;
+  scroll-snap-align: start;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.card:hover .image {
+  transform: scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .rail {
+    grid-auto-columns: 260px;
+  }
+  .card {
+    height: 180px;
+  }
+}
