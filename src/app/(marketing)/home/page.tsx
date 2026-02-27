@@ -1,8 +1,11 @@
+import HomeQuote from "@/app/components/sections/HomeQuote";
+import HomeGrid from "@/app/components/sections/HomeGrid";
+
 export default function HomePage() {
   return (
     <main>
-      <h1>Home</h1>
-      <p>Marketing Layout con Navbar + Footer.</p>
+      <HomeQuote />
+      <HomeGrid />
     </main>
   );
 }
