@@ -1,11 +1,9 @@
-import EventsIntro from "@/app/components/sections/events/EventsIntro";
-import EventsList from "@/app/components/sections/events/EventsList";
+import EventsBoard from "@/app/components/sections/events/EventsBoard";
 
 export default function VeranstaltungPage() {
   return (
     <main>
-      <EventsIntro />
-      <EventsList />
+      <EventsBoard />
     </main>
   );
 }

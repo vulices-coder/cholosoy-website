@@ -1,0 +1,74 @@
+.section {
+  padding: 32px 0 72px;
+  background: var(--color-surface); /* blanco */
+}
+
+.title {
+  text-align: center;
+  margin: 10px 0 18px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 260px 1fr 130px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* Imagen izquierda */
+.media {
+  position: relative;
+  height: 120px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #eee;
+}
+
+.image {
+  object-fit: cover;
+}
+
+/* Texto centro (amarillo claro) */
+.body {
+  background: var(--color-footer-bg);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  margin: 0;
+  line-height: 1.35;
+  font-size: 13px;
+}
+
+/* Fecha derecha (turquesa) */
+.dateBox {
+  background: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date {
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .dateBox {
+    height: 44px;
+  }
+}
