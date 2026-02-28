@@ -22,6 +22,26 @@
   --color-footer-bg: var(--yellow-300);
   --color-accent: var(--blue-500);
 
+  /* ===== Fonts ===== */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+    "Noto Sans", "Liberation Sans", sans-serif;
+  --font-handwritten: cursive;
+
+  /* ===== Typography tokens (Figma-driven) ===== */
+  --type-title-md-family: var(--font-sans);
+  --type-title-md-weight: 500;
+  --type-title-md-size: 24px;
+  --type-title-md-line: 1.2;
+  --type-title-md-letter: 0em;
+
+  --type-date-family: var(--font-sans);
+  --type-date-weight: 500;
+  --type-date-size: 26px;
+  --type-date-line: 1.2;
+  --type-date-letter: 0em;
+
+  --type-handwritten-hero-family: var(--font-handwritten);
+
   /* ===== Layout sizes ===== */
   --nav-height: 136px;
   --footer-height: 72px;
