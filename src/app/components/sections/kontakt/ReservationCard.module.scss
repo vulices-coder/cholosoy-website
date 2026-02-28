@@ -1,0 +1,65 @@
+.card {
+  position: relative;
+  background: var(--color-footer-bg); /* amarillo suave */
+  border-radius: 14px;
+  padding: 18px;
+  min-height: 360px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--type-title-md-family);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.badge {
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.info {
+  margin-top: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.note {
+  margin: 0;
+  font-size: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.icon {
+  width: 22px;
+  text-align: center;
+}
+
+.to {
+  opacity: 0.7;
+}
+
+.whatsapp {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: var(--color-surface);
+  cursor: pointer;
+}
