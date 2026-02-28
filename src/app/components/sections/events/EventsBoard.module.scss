@@ -1,31 +1,35 @@
 .section {
+  background: var(--color-surface);
   padding: 32px 0 72px;
-  background: var(--color-surface); /* blanco */
 }
 
 .title {
+  font-family: var(--type-title-md-family);
+  font-weight: var(--type-title-md-weight);
+  font-size: var(--type-title-md-size);
+  line-height: var(--type-title-md-line);
+  letter-spacing: var(--type-title-md-letter);
   text-align: center;
-  margin: 10px 0 18px;
-  font-size: 28px;
-  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 29px; /* spacing Figma */
 }
 
 .list {
   display: grid;
-  gap: 14px;
+  gap: 27px;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 260px 1fr 130px;
-  gap: 14px;
+  grid-template-columns: 260px 757px 125px;
+  gap: 24px;
   align-items: stretch;
 }
 
-/* Imagen izquierda */
+/* Imagen */
 .media {
   position: relative;
-  height: 120px;
+  height: 221px;
   border-radius: 14px;
   overflow: hidden;
   background: #eee;
@@ -35,40 +39,64 @@
   object-fit: cover;
 }
 
-/* Texto centro (amarillo claro) */
+/* Bloque central */
 .body {
-  background: var(--color-footer-bg);
-  border-radius: 14px;
-  padding: 14px 16px;
+  background: var(--yellow-300); /* #f4d98c */
+  /* o si quieres el amarillo fuerte: var(--yellow-500) */
+  padding: 16px;
   display: flex;
   align-items: center;
+  height: 221px; /* si ese es el alto del bloque amarillo */
 }
 
 .text {
   margin: 0;
+  font-family: var(--type-title-md-family);
+  font-weight: var(--type-title-md-weight);
+  font-size: var(--type-title-md-size);
   line-height: 1.35;
-  font-size: 13px;
+  letter-spacing: var(--type-title-md-letter);
+  color: var(--color-text);
 }
 
-/* Fecha derecha (turquesa) */
+/* Fecha */
 .dateBox {
-  background: var(--color-accent);
+  width: 125px;
+  height: 221px; /* igual al bloque amarillo */
+  background: var(--blue-500);
+  border: 2px solid var(--color-black);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .date {
+  font-family: var(--type-date-family);
+  font-weight: var(--type-date-weight);
+  font-size: 20px; /* antes 26 */
+  line-height: 1.2;
+  letter-spacing: var(--type-date-letter);
   color: var(--color-white);
-  font-weight: 700;
-  font-size: 12px;
 }
 
-@media (max-width: 900px) {
+/* Responsive */
+@media (max-width: 1100px) {
   .row {
-    grid-template-columns: 1fr;
-  }
+  display: grid;
+  grid-template-columns: 260px 757px 125px;
+  gap: 24px;
+  align-items: center; /* antes: stretch */
+}
+
+.media,
+  .body,
   .dateBox {
-    height: 44px;
+    width: 100%;
+    height: auto;
+    min-height: 120px;
+  }
+
+  .dateBox {
+    height: 60px;
   }
 }
