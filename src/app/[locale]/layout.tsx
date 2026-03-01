@@ -1,31 +1,14 @@
-import "@/styles/tokens.css";
-import "@/styles/globals.scss";
-
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import { locales } from "@/i18n/routing";
-
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
-
-export default async function LocaleLayout({
+export default function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: { locale: string };
 }) {
-  const { locale } = await params;
-  const messages = await getMessages();
+  // Validación simple (por ahora no redirigimos, solo “sanitizamos”)
+  const locale = ["de", "es", "en"].includes(params.locale) ? params.locale : "de";
 
-  return (
-    <html lang={locale}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
-  );
+  // No renderizamos <html> ni <body> aquí (eso es del RootLayout)
+  // Luego usaremos el locale para links, textos e i18n.
+  return <div data-locale={locale}>{children}</div>;
 }

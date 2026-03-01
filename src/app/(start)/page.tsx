@@ -11,7 +11,7 @@ export default function StartPage() {
         <div className={styles.inner}>
           <div className={styles.logo}>
             <Image
-              src="/logo.svg"
+              src="/images/brand/logo.svg"
               alt="CholoSoy Logo"
               width={200}
               height={200}
@@ -20,11 +20,11 @@ export default function StartPage() {
           </div>
 
           <div className={styles.actions}>
-            <Link href="/home">
+            <Link href="de/home">
               <Button variant="primary">Home</Button>
             </Link>
 
-            <Link href="/kontakt">
+            <Link href="de/kontakt">
               <Button variant="ghost">Kontakt</Button>
             </Link>
           </div>
