@@ -1,12 +1,5 @@
-export default function KarteLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <div>Karte Layout</div>
-      {children}
-    </>
-  );
+import KarteShell from "@/app/components/sections/karte/KarteShell";
+
+export default function KarteLayout({ children }: { children: React.ReactNode }) {
+  return <KarteShell>{children}</KarteShell>;
 }
