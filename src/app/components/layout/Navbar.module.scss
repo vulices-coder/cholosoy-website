@@ -8,16 +8,16 @@
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-  background: var(--color-footer-bg);
-  font-weight: 700;
-  color: var(--color-black);
-  text-decoration: none;
+  width: var(--nav-icon-size);
+  height: var(--nav-icon-size);
+  position: relative; 
+  display: block;
+}
+
+.logoImage {
+  object-fit: contain;
+  transform: scale(1.05);         /* sube/baja este valor */
+  transform-origin: center;
 }
 
 .links {
@@ -33,11 +33,31 @@
 }
 
 .avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: var(--color-footer-bg);
-  display: grid;
-  place-items: center;
-  text-decoration: none;
+  width: var(--nav-icon-size);
+  height: var(--nav-icon-size);
+  flex: 0 0 auto;
+  display: inline-block;
+
+  /* color base del círculo */
+  background-color: var(--yellow-300);
+
+  /* usamos el SVG como máscara */
+  -webkit-mask: url("/images/brand/avatar.svg") center / contain no-repeat;
+  mask: url("/images/brand/avatar.svg") center / contain no-repeat;
+
+  /* IMPORTANTÍSIMO: nada de scale que lo “encoge” */
+  transform: none;
+  transition: background-color 160ms ease;
 }
+
+.avatar:hover {
+  background-color: var(--color-white);
+}
+
+/* Estado “clickeado” = ruta actual (/kontakt)
+   Si ya tienes lógica de active link, úsala.
+   Si no, luego lo hacemos con pathname. */
+.avatar[aria-current="page"] {
+  background-color: var(--color-white);
+}
+
