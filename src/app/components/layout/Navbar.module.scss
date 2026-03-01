@@ -7,45 +7,63 @@
   gap: 24px;
 }
 
+/* Logo y avatar se quedan “fijos” */
 .logo {
   width: var(--nav-icon-size);
   height: var(--nav-icon-size);
-  position: relative; 
+  position: relative;
+  flex: 0 0 var(--nav-icon-size);
   display: block;
 }
 
 .logoImage {
   object-fit: contain;
-  transform: scale(1.05);         /* sube/baja este valor */
-  transform-origin: center;
 }
 
+/* ✅ CLAVE: este bloque ocupa todo el espacio entre logo y avatar */
 .links {
+  flex: 1;                 /* toma el espacio central */
   display: flex;
-  gap: 28px;
-  margin: 0 auto;
+  justify-content: center; /* centra los links */
+  align-items: center;
+  gap: 32px;               /* ajustable según Figma */
+  min-width: 0;            /* evita overflow raro */
 }
 
+/* Links base */
 .links a {
   color: var(--color-white);
   text-decoration: none;
   font-weight: 600;
+  display: inline-block;          /* para que transform no “rompa” */
+  transform-origin: center;
+  transition: transform 160ms ease, color 160ms ease;
+  will-change: transform;
 }
 
+/* ✅ Hover amable: agranda + cambia a amarillo */
+.links a:hover {
+  color: var(--yellow-500);
+  transform: scale(1.08);
+}
+
+/* (Opcional) estado activo si luego lo aplicas con aria-current */
+.links a[aria-current="page"] {
+  color: var(--yellow-500);
+}
+
+/* Avatar fijo a la derecha */
 .avatar {
   width: var(--nav-icon-size);
   height: var(--nav-icon-size);
-  flex: 0 0 auto;
+  flex: 0 0 var(--nav-icon-size);
   display: inline-block;
 
-  /* color base del círculo */
   background-color: var(--yellow-300);
 
-  /* usamos el SVG como máscara */
   -webkit-mask: url("/images/brand/avatar.svg") center / contain no-repeat;
   mask: url("/images/brand/avatar.svg") center / contain no-repeat;
 
-  /* IMPORTANTÍSIMO: nada de scale que lo “encoge” */
   transform: none;
   transition: background-color 160ms ease;
 }
@@ -54,10 +72,71 @@
   background-color: var(--color-white);
 }
 
-/* Estado “clickeado” = ruta actual (/kontakt)
-   Si ya tienes lógica de active link, úsala.
-   Si no, luego lo hacemos con pathname. */
 .avatar[aria-current="page"] {
   background-color: var(--color-white);
 }
 
+@media (max-width: 900px) {
+  .links {
+    gap: 18px;
+  }
+  .links a:hover {
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  /* reducimos tamaño de iconos en móvil */
+  .logo,
+  .avatar {
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+  }
+
+  /* logo queda arriba izquierda */
+  .logo {
+    order: 1;
+  }
+
+  /* avatar arriba derecha */
+  .avatar {
+    order: 2;
+    margin-left: auto;
+  }
+
+  /* links pasan a segunda fila, centrados */
+  .links {
+    order: 3;
+    flex: 0 0 100%;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .links a {
+    font-size: 14px;
+  }
+
+  /* en móvil mejor sin scale para evitar saltos/choques */
+  .links a:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .links {
+    gap: 10px;
+  }
+  .links a {
+    font-size: 13px;
+  }
+}
