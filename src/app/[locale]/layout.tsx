@@ -1,14 +1,22 @@
-export default function LocaleLayout({
+// src/app/[locale]/layout.tsx
+import type { ReactNode } from "react";
+
+type Locale = "de" | "es" | "en";
+
+function sanitizeLocale(raw: string): Locale {
+  return (["de", "es", "en"] as const).includes(raw as Locale) ? (raw as Locale) : "de";
+}
+
+export default async function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  // Validación simple (por ahora no redirigimos, solo “sanitizamos”)
-  const locale = ["de", "es", "en"].includes(params.locale) ? params.locale : "de";
+  const { locale: raw } = await params;
+  const locale = ["de", "es", "en"].includes(raw) ? raw : "de";
 
-  // No renderizamos <html> ni <body> aquí (eso es del RootLayout)
-  // Luego usaremos el locale para links, textos e i18n.
-  return <div data-locale={locale}>{children}</div>;
+  // OJO: aquí NO pongas <html>/<body> si ya lo haces en RootLayout global
+  return <>{children}</>;
 }

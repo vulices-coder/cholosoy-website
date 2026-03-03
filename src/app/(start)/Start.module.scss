@@ -1,35 +1,270 @@
-.wrapper {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  background: var(--color-bg);
+/* src/app/(start)/Start.module.scss */
+
+.page {
+  background: transparent;
+  margin: 0;
+  padding: 0;
 }
 
-.inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xl);
-  text-align: center;
+/* =========================
+   HERO (foto + Home/Logo/Kontakt + banderas)
+   Desktop estable con aspect-ratio (evita recorte brutal en ultra-wide)
+   ========================= */
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 520px;
+  max-height: 820px;
+  overflow: hidden;
+  margin: 0;
 }
 
-.logo {
+.heroImg {
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+/* Top grid: Home | Logo | Kontakt */
+.heroTop {
+  position: absolute;
+  top: 66px;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  padding: 0 44px;
+  z-index: 2;
+}
+
+.heroLogo {
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-.logo img {
-  animation: float 4s ease-in-out infinite;
+.heroLink {
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: clamp(26px, 3vw, 44px);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
+.heroLink:last-child {
+  text-align: right;
 }
 
-.actions {
+/* banderas verticales izquierda */
+.flags {
+  position: absolute;
+  left: 48px;
+  top: 350px;
   display: flex;
-  gap: var(--space-lg);
+  flex-direction: column;
+  gap: 10px;
+  z-index: 2;
+
+  a {
+    font-size: 22px;
+    line-height: 1;
+    text-decoration: none;
+    display: inline-flex;
+    transition: transform 160ms ease;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  }
+
+  a:hover {
+    transform: scale(1.08);
+  }
 }
+
+/* =========================
+   BARRA AMARILLA (solo aquí)
+   ========================= */
+.titleBar {
+  background: var(--yellow-300);
+  border: 0;
+  padding: 20px 16px;
+  text-align: center;
+  margin: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-handwritten);
+  font-size: clamp(58px, 3vw, 64px);
+  line-height: 1;
+  color: var(--yellow-900);
+}
+
+/* =========================
+   SECTION 2 (foto papa + cookie card)
+   Desktop estable con aspect-ratio
+   ========================= */
+.section {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 520px;
+  max-height: 820px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.sectionImg {
+  object-fit: cover;
+  object-position: 35% center;
+}
+
+/* dentro de .section */
+.cookieSlot {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 5;
+}
+
+@media (max-width: 700px) {
+  .cookieSlot {
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+  }
+}
+
+// /* =========================
+//    COOKIE CARD (UNA sola definición)
+//    ========================= */
+// .cookieCard {
+//   position: absolute;
+//   right: 20px;              /* poca separación derecha */
+//   bottom: 20px;             /* pegada abajo */
+//   top: auto;                /* importante */
+//   transform: none;          /* quitamos centrado vertical */
+
+//   z-index: 5;
+
+//   width: clamp(260px, 22vw, 320px);  /* 🔥 más angosta */
+//   padding: 18px;
+
+//   background: rgba(250, 231, 165, 0.97);
+//   backdrop-filter: blur(6px);
+
+//   border-radius: 12px;
+//   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+
+//   display: flex;
+//   flex-direction: column;
+//   gap: 14px;
+// }
+// .cookieTitle {
+//   margin: 0;
+//   font-weight: 800;
+//   font-size: 18px;
+//   line-height: 1.2;
+// }
+
+// .cookieText {
+//   margin: 0;
+//   font-size: 14px;
+//   line-height: 1.5;
+// }
+
+// .cookieActions {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 12px;
+// }
+
+// .cookieBtn,
+// .cookieBtnPrimary {
+//   height: 44px;
+//   border-radius: 10px;
+//   font-weight: 700;
+//   font-size: 14px;
+//   letter-spacing: 0.5px;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+// }
+
+// .cookieBtn {
+//   background: transparent;
+//   border: 2px solid rgba(0, 0, 0, 0.35);
+// }
+
+// .cookieBtn:hover {
+//   background: rgba(0, 0, 0, 0.08);
+// }
+
+// .cookieBtnPrimary {
+//   background: #5b4a12;
+//   color: white;
+//   border: none;
+// }
+
+// .cookieBtnPrimary:hover {
+//   background: #3f350d;
+// }
+
+// /* =========================
+//    RESPONSIVE (tablets)
+//    ========================= */
+// @media (max-width: 900px) {
+//   .heroTop {
+//     padding: 0 18px;
+//   }
+
+//   .flags {
+//     top: 160px;
+//     left: 18px;
+//   }
+
+//   .cookieCard {
+//     right: 18px;
+//     width: min(360px, 46vw);
+//   }
+// }
+
+// /* =========================
+//    RESPONSIVE (móviles)
+//    ========================= */
+// @media (max-width: 700px) {
+//   .hero {
+//     aspect-ratio: 4 / 5;
+//     min-height: 520px;
+//     max-height: none;
+//   }
+
+//   .heroImg {
+//     object-position: center 30%;
+//   }
+
+//   .heroTop {
+//     top: 22px;
+//     padding: 0 16px;
+//   }
+
+//   .flags {
+//     left: 14px;
+//     top: 110px;
+//   }
+
+//   .section {
+//     aspect-ratio: 4 / 5;
+//     min-height: 520px;
+//     max-height: none;
+//   }
+
+//   .sectionImg {
+//     object-position: 20% center;
+//   }
+
+//   .cookieCard {
+//   right: 12px;
+//   left: 12px;
+//   bottom: 12px;
+//   width: auto;
+//   padding: 16px;
+// }
+// }

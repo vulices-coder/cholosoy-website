@@ -4,12 +4,13 @@ const LOCALES = new Set(["de", "es", "en"]);
 
 export function GET(req: Request) {
   const url = new URL(req.url);
+
   const locale = (url.searchParams.get("l") || "de").toLowerCase();
-  const redirectTo = url.searchParams.get("to") || "/home";
+  const to = url.searchParams.get("to") || "/";
 
   const safeLocale = LOCALES.has(locale) ? locale : "de";
 
-  const res = NextResponse.redirect(new URL(redirectTo, url.origin));
+  const res = NextResponse.redirect(new URL(to, url.origin));
   res.cookies.set("cholosoy_locale", safeLocale, {
     path: "/",
     sameSite: "lax",

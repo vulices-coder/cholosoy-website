@@ -1,3 +1,11 @@
 {
-  "start": { "home": "Home", "kontakt": "Kontakt" }
+  "start": {
+    "welcomeTitle": "¡Bienvenido al mágico Perú!",
+    "home": "Inicio",
+    "kontakt": "Contacto",
+    "cookiesTitle": "Cookies y privacidad",
+    "cookiesText": "Usamos cookies para mejorar la web. Puedes aceptar solo las necesarias o aceptar todas.",
+    "cookiesNecessary": "Solo necesarias",
+    "cookiesAccept": "Aceptar"
+  }
 }
