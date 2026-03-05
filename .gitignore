@@ -11,3 +11,5 @@ out
 # accidental artifacts
 next
 cholosoy-website@0.1.0
+
+/generated/prisma

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import Footer from "@/app/components/layout/Footer";
+import Footer from "@/components/layout/Footer";
 import styles from "./LogisticsForm.module.scss";
 
 export default function LogisticsForm() {

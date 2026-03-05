@@ -9,8 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "destr": "^2.0.5",
     "next": "16.1.6",
     "next-intl": "^4.8.3",
+    "rc9": "^3.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "sass": "^1.97.3",
@@ -22,6 +25,11 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "prisma": "^6.19.2",
+    "tsx": "^4.21.0",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

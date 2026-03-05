@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  date      DateTime
+  location  String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+}
+
+model GalleryImage {
+  id        String   @id @default(uuid())
+  url       String
+  category  String
+  alt       String?
+  createdAt DateTime @default(now())
+}
+
+model MenuItem {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float
+  category    String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  guests    Int
+  dateTime  DateTime
+  notes     String?
+  locale    String   @default("de")
+  status    ReservationStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
+}
+
+model CateringRequest {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+
+  eventDate DateTime
+  location  String?
+
+  people    Int
+  budget    Int?
+  message   String?
+  locale    String   @default("de")
+  status    CateringStatus @default(NEW)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CateringStatus {
+  NEW
+  CONTACTED
+  CONFIRMED
+  CANCELED
+}
