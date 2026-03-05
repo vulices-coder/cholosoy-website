@@ -1,11 +1,12 @@
 {
   "start": {
-    "welcomeTitle": "Willkommen im magischen Perú!",
-    "home": "Home",
-    "kontakt": "Kontakt",
-    "cookiesTitle": "Cookies & Datenschutz",
-    "cookiesText": "Wir verwenden Cookies, um die Website zu verbessern. Du kannst nur notwendige Cookies erlauben oder allen zustimmen.",
-    "cookiesNecessary": "Nur notwendig",
-    "cookiesAccept": "Zustimmen"
+    "welcomeTitle": "Willkommen im magischen Peru!",
+    "cookies": {
+      "title": "Cookie-Einstellungen",
+      "text": "Wir verwenden Cookies und ähnliche Technologien, um unseren Webservice zu ermöglichen. Mit Ihrer Einwilligung setzen wir zusätzlich Analyse- und Marketing-Cookies von Partnern (Google, Meta, Microsoft) ein, um Inhalte und Werbung zu personalisieren.\n\nDaten können in Länder außerhalb der EU (z. B. USA) übertragen werden. Weitere Informationen und individuelle Einstellungen finden Sie in den [Datenschutzhinweisen].\n\nSie können Ihre Einwilligung jederzeit widerrufen.",
+      "settings": "EINSTELLUNGEN",
+      "rejectAll": "ALLE ABLEHNEN",
+      "acceptAll": "ZUSTIMMEN"
+    }
   }
 }

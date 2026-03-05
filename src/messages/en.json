@@ -1,11 +1,14 @@
 {
   "start": {
-    "welcomeTitle": "Welcome to magical Peru!",
     "home": "Home",
     "kontakt": "Contact",
-    "cookiesTitle": "Cookies & privacy",
-    "cookiesText": "We use cookies to improve the website. You can allow only necessary cookies or accept all.",
-    "cookiesNecessary": "Necessary only",
-    "cookiesAccept": "Accept all"
+    "welcomeTitle": "Welcome to magical Peru!",
+    "cookies": {
+      "title": "Cookie settings",
+      "text": "We use cookies and similar technologies to enable our website. With your consent, we also use analytics and marketing cookies from partners (Google, Meta, Microsoft) to personalize content and ads.\n\nData may be transferred to countries outside the EU (e.g., USA). More info and settings are available in our [Privacy Policy].\n\nYou can withdraw consent at any time.",
+      "settings": "SETTINGS",
+      "rejectAll": "REJECT ALL",
+      "acceptAll": "ACCEPT"
+    }
   }
 }

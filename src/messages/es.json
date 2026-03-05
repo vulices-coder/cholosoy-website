@@ -1,11 +1,14 @@
 {
   "start": {
-    "welcomeTitle": "¡Bienvenido al mágico Perú!",
     "home": "Inicio",
     "kontakt": "Contacto",
-    "cookiesTitle": "Cookies y privacidad",
-    "cookiesText": "Usamos cookies para mejorar la web. Puedes aceptar solo las necesarias o aceptar todas.",
-    "cookiesNecessary": "Solo necesarias",
-    "cookiesAccept": "Aceptar"
+    "welcomeTitle": "¡Bienvenido al mágico Perú!",
+    "cookies": {
+      "title": "Configuración de cookies",
+      "text": "Utilizamos cookies propias y de terceros (Google, Meta, Microsoft) para el funcionamiento de la web y, con su consentimiento, para análisis, marketing y personalización de contenidos.\n\nLos datos pueden transferirse a países fuera de la UE (p. ej., EE. UU.). Más información y configuración en los [Avisos de privacidad].\n\nPuede retirar su consentimiento en cualquier momento.",
+      "settings": "CONFIGURACIÓN",
+      "rejectAll": "RECHAZAR TODO",
+      "acceptAll": "ACEPTAR"
+    }
   }
 }
