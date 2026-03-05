@@ -1,5 +1,5 @@
 import styles from "./HomeQuote.module.scss";
-import Container from "@/app/components/ui/Container";
+import Container from "@/components/ui/Container";
 
 export default function HomeQuote() {
   return (
