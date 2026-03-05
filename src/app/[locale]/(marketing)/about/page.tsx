@@ -1,4 +1,4 @@
-import AboutIntro from "@/app/components/sections/about/AboutIntro";
+import AboutIntro from "@/components/sections/about/AboutIntro";
 
 export default function AboutPage() {
   return (

@@ -1,4 +1,4 @@
-import GalleryRail from "@/app/components/sections/gallery/GalleryRail";
+import GalleryRail from "@/components/sections/gallery/GalleryRail";
 
 export default function GalleryPage() {
   return (

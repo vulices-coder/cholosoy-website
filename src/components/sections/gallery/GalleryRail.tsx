@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Container from "@/app/components/ui/Container";
+import Container from "@/components/ui/Container";
 import styles from "./GalleryRail.module.scss";
 
 const images = Array.from({ length: 25 }, (_, i) => {

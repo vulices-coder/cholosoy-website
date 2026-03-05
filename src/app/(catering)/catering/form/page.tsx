@@ -1,4 +1,4 @@
-import ServicePlanForm from "@/app/components/sections/catering/ServicePlanForm";
+import ServicePlanForm from "@/components/sections/catering/ServicePlanForm";
 
 export default function CateringFormPage() {
   return <ServicePlanForm />;

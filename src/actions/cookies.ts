@@ -2,7 +2,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { COOKIE_NAME, COOKIE_MAX_AGE, type Consent } from '@/app/lib/cookies/types'
+import { COOKIE_NAME, COOKIE_MAX_AGE, type Consent } from '@/lib/cookies/types'
 
 export async function getConsent(): Promise<Consent | null> {
   const cookieStore = await cookies()

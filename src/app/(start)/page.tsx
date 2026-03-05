@@ -4,8 +4,8 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import styles from "./Start.module.scss";
 
-import CookieConsentEngine from "@/app/components/consent/CookieConsentEngine";
-import CookieCard from "@/app/components/consent/CookieCard";
+import CookieConsentEngine from "@/components/consent/CookieConsentEngine";
+import CookieCard from "@/components/consent/CookieCard";
 
 import de from "@/messages/de.json";
 import es from "@/messages/es.json";

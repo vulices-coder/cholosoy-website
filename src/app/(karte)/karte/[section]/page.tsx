@@ -1,5 +1,5 @@
-import KartePage from "@/app/components/sections/karte/KartePage";
-import { KARTE_SECTIONS, type KarteSection } from "@/app/components/sections/karte/menu.data";
+import KartePage from "@/components/sections/karte/KartePage";
+import { KARTE_SECTIONS, type KarteSection } from "@/components/sections/karte/menu.data";
 import { notFound } from "next/navigation";
 
 export default async function KarteSectionPage({

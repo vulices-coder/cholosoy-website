@@ -1,5 +1,5 @@
-import ReservationCard from "@/app/components/sections/kontakt/ReservationCard";
-import KontaktForm from "@/app/components/sections/kontakt/KontaktForm";
+import ReservationCard from "@/components/sections/kontakt/ReservationCard";
+import KontaktForm from "@/components/sections/kontakt/KontaktForm";
 import styles from "./KontaktPage.module.scss";
 
 export default function KontaktPage() {

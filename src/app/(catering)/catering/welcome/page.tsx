@@ -1,4 +1,4 @@
-import WelcomeCard from "@/app/components/sections/catering/WelcomeCard";
+import WelcomeCard from "@/components/sections/catering/WelcomeCard";
 
 export default function CateringWelcomePage() {
   return <WelcomeCard />;
