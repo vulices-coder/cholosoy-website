@@ -1,4 +1,4 @@
-// src/middleware.ts
+// src/proxy.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -15,7 +15,7 @@ const PROTECTED_SEGMENTS = new Set([
   "catering",
 ]);
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Ignorar assets internos / api
@@ -39,7 +39,7 @@ export function middleware(req: NextRequest) {
   const maybeLocale = parts[0];
   const segment = parts[1];
 
-  // Si no es ruta /[locale]/..., no tocamos (pero /home igual no existe)
+  // Si no es ruta /[locale]/..., no tocamos
   if (!LOCALES.has(maybeLocale)) return NextResponse.next();
 
   // Si no es una página protegida, ok

@@ -1,4 +1,4 @@
-import EventsBoard from "@/app/components/sections/events/EventsBoard";
+import EventsBoard from "@/components/sections/events/EventsBoard";
 
 export default function VeranstaltungPage() {
   return (
