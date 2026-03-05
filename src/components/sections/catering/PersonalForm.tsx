@@ -3,10 +3,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styles from "./PersonalForm.module.scss";
+
+type Locale = "de" | "es" | "en";
+
+function readLocaleCookie(): Locale {
+  if (typeof document === "undefined") return "de";
+  const m = document.cookie.match(/(?:^|;\s*)cholosoy_locale=([^;]+)/);
+  const raw = m ? decodeURIComponent(m[1]).toLowerCase() : "de";
+  if (raw === "de" || raw === "es" || raw === "en") return raw;
+  return "de";
+}
 
 export default function PersonalForm() {
   const router = useRouter();
+  const [locale, setLocale] = useState<Locale>("de");
+
+  useEffect(() => {
+    setLocale(readLocaleCookie());
+  }, []);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,7 +33,7 @@ export default function PersonalForm() {
   return (
     <main className={styles.page}>
       <section className={styles.card}>
-        <Link href="/home" className={styles.logo} aria-label="Zur Home">
+        <Link href={`/${locale}/home`} className={styles.logo} aria-label="Zur Home">
           <Image
             src="/images/brand/logo.svg"
             alt="CholoSoy"

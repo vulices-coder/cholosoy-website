@@ -2,13 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import styles from "./KartePage.module.scss";
 import { MENU_ITEMS, SECTION_LABEL, type KarteSection } from "./menu.data";
 import KarteToolbar from "./KarteToolbar";
 
+type Locale = "de" | "es" | "en";
+
+function readLocaleCookie(): Locale {
+  if (typeof document === "undefined") return "de";
+  const m = document.cookie.match(/(?:^|;\s*)cholosoy_locale=([^;]+)/);
+  const raw = m ? decodeURIComponent(m[1]).toLowerCase() : "de";
+  if (raw === "de" || raw === "es" || raw === "en") return raw;
+  return "de";
+}
+
 export default function KartePage({ section }: { section: KarteSection }) {
   const [zoom, setZoom] = useState(1);
+  const [locale, setLocale] = useState<Locale>("de");
+
+  useEffect(() => {
+    setLocale(readLocaleCookie());
+  }, []);
 
   const items = useMemo(() => MENU_ITEMS[section], [section]);
 
@@ -16,7 +31,7 @@ export default function KartePage({ section }: { section: KarteSection }) {
     <div className={styles.sheetWrap}>
       <div className={styles.sheet} style={{ ["--zoom" as any]: zoom }}>
         <div className={styles.header}>
-          <Link href="/home" aria-label="Zur Home">
+          <Link href={`/${locale}/home`} aria-label="Zur Home">
             <Image
               src="/images/brand/logo.svg"
               alt="CholoSoy"

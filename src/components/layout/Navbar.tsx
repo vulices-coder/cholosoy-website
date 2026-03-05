@@ -19,24 +19,23 @@ export default function Navbar() {
   // Prefija locale SOLO si existe
   const withLocale = (path: string) => (locale ? `/${locale}${path}` : path);
 
-  // ⚠️ Estas rutas EXISTEN en [locale]/(marketing)
-  const homeHref = withLocale("/home");
+  // ✅ Rutas marketing bajo [locale]
+  const homeHref = locale ? `/${locale}/home` : "/";
   const aboutHref = withLocale("/about");
   const galleryHref = withLocale("/gallery");
   const eventsHref = withLocale("/veranstaltung");
   const kontaktHref = withLocale("/kontakt");
 
-  // ⚠️ Estas rutas AÚN NO están bajo [locale] en tu proyecto (por ahora)
+  // ✅ Rutas que aún NO están bajo [locale]
   const karteHref = "/karte/vorspeisen";
   const cateringHref = "/catering";
 
-  // Regla del logo:
-  // - si estás en /{locale}/home => logo va a / (Startseite)
+  // Logo:
+  // - si estás en /{locale}/home => logo va a /
   // - en cualquier otra página marketing => vuelve a /{locale}/home
-  const isHome = locale ? pathname === `/${locale}/home` : pathname === "/home";
+  const isHome = locale ? pathname === `/${locale}/home` : false;
   const logoHref = isHome ? "/" : homeHref;
 
-  // (Opcional) estado activo simple
   const isActive = (href: string) => pathname === href;
 
   return (
@@ -65,7 +64,10 @@ export default function Navbar() {
         <Link href={eventsHref} aria-current={isActive(eventsHref) ? "page" : undefined}>
           Veranstaltung
         </Link>
-        <Link href={cateringHref} aria-current={pathname.startsWith("/catering") ? "page" : undefined}>
+        <Link
+          href={cateringHref}
+          aria-current={pathname.startsWith("/catering") ? "page" : undefined}
+        >
           Catering
         </Link>
       </nav>
