@@ -13,3 +13,10 @@ next
 cholosoy-website@0.1.0
 
 /generated/prisma
+
+# Environment variables
+.env
+.env.*
+
+# Prisma local config
+prisma.config.ts*
