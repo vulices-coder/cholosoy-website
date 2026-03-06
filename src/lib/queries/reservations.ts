@@ -7,5 +7,7 @@ export async function getReservations() {
 }
 
 export async function getReservationById(id: string) {
-  return prisma.reservation.findUnique({ where: { id } });
+  return prisma.reservation.findUnique({
+    where: { id },
+  });
 }

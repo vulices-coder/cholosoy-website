@@ -1,26 +1,77 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ReservationCard.module.scss";
 
 type Reservation = {
   guests: number;
+  date: string;
   dateLabel: string;
+  time: string;
   timeLabel: string;
   kitchenClose: string;
 };
 
+const STORAGE_KEY = "cholosoy_reservation_selection";
+
+function toDateLabel(date: string) {
+  if (!date) return "";
+  try {
+    const d = new Date(`${date}T00:00:00`);
+    return d.toLocaleDateString("de-DE", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+    });
+  } catch {
+    return date;
+  }
+}
+
+function toTimeLabel(time: string) {
+  if (!time) return "";
+  return `${time} bis 18:00`;
+}
+
 export default function ReservationCard({ reservation }: { reservation: Reservation }) {
   const [isEditing, setIsEditing] = useState(false);
   const [guests, setGuests] = useState(reservation.guests);
-  const [dateLabel, setDateLabel] = useState(reservation.dateLabel);
-  const [timeLabel, setTimeLabel] = useState(reservation.timeLabel);
-
+  const [date, setDate] = useState(reservation.date);
+  const [time, setTime] = useState(reservation.time);
   const [confirmed, setConfirmed] = useState(true);
 
+  useEffect(() => {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (!saved) {
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          guests: reservation.guests,
+          date: reservation.date,
+          time: reservation.time,
+        })
+      );
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(saved);
+      setGuests(parsed.guests ?? reservation.guests);
+      setDate(parsed.date ?? reservation.date);
+      setTime(parsed.time ?? reservation.time);
+    } catch {}
+  }, [reservation]);
+
   function save() {
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        guests,
+        date,
+        time,
+      })
+    );
     setIsEditing(false);
-    // luego: levantar state al page.tsx
   }
 
   return (
@@ -62,11 +113,12 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
           {isEditing ? (
             <input
               className={styles.inlineInput}
-              value={dateLabel}
-              onChange={(e) => setDateLabel(e.target.value)}
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           ) : (
-            <strong className={styles.value}>{dateLabel}</strong>
+            <strong className={styles.value}>{toDateLabel(date) || reservation.dateLabel}</strong>
           )}
         </div>
 
@@ -75,11 +127,12 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
           {isEditing ? (
             <input
               className={styles.inlineInput}
-              value={timeLabel}
-              onChange={(e) => setTimeLabel(e.target.value)}
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
             />
           ) : (
-            <strong className={styles.value}>{timeLabel}</strong>
+            <strong className={styles.value}>{toTimeLabel(time) || reservation.timeLabel}</strong>
           )}
         </div>
       </div>

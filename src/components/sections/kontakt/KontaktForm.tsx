@@ -1,11 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { createReservation } from "@/actions/reservations";
 import styles from "./KontaktForm.module.scss";
 
 type Anrede = "frau" | "herr" | "divers";
+type Locale = "de" | "es" | "en";
 
-export default function KontaktForm() {
+const STORAGE_KEY = "cholosoy_reservation_selection";
+
+export default function KontaktForm({ locale }: { locale: Locale }) {
   const [anrede, setAnrede] = useState<Anrede>("frau");
   const [vorname, setVorname] = useState("");
   const [nachname, setNachname] = useState("");
@@ -13,10 +17,10 @@ export default function KontaktForm() {
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
 
-  // ✅ Pflicht-Checks
   const [agbOk, setAgbOk] = useState(false);
   const [dsOk, setDsOk] = useState(false);
   const [kontaktOk, setKontaktOk] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isEmailValid = (value: string) => /\S+@\S+\.\S+/.test(value);
 
@@ -29,27 +33,62 @@ export default function KontaktForm() {
 
     const checksOk = agbOk && dsOk && kontaktOk;
 
-    return fieldsOk && checksOk;
-  }, [vorname, nachname, telefon, email, agbOk, dsOk, kontaktOk]);
+    return fieldsOk && checksOk && !loading;
+  }, [vorname, nachname, telefon, email, agbOk, dsOk, kontaktOk, loading]);
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
 
-    // ✅ Por ahora: solo prueba (luego: Server Action / API)
-    console.log("Reservierung anfragen:", {
-      anrede,
-      vorname,
-      nachname,
-      telefon,
-      email,
-      comment,
-      agbOk,
-      dsOk,
-      kontaktOk,
-    });
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (!saved) {
+      alert("Reservierungsdaten fehlen. Bitte wählen Sie zuerst Datum, Uhrzeit und Gäste.");
+      return;
+    }
 
-    alert("Danke! Wir haben Ihre Anfrage erhalten.");
+    let selection: { guests: number; date: string; time: string };
+    try {
+      selection = JSON.parse(saved);
+    } catch {
+      alert("Reservierungsdaten sind ungültig.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await createReservation({
+        name: `${vorname.trim()} ${nachname.trim()}`,
+        email,
+        phone: telefon,
+        guests: Number(selection.guests),
+        date: selection.date,
+        time: selection.time,
+        notes: [
+          `Anrede: ${anrede}`,
+          comment?.trim() ? `Kommentar: ${comment.trim()}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+        locale,
+      });
+
+      alert("Danke! Wir haben Ihre Reservierung erhalten.");
+
+      setVorname("");
+      setNachname("");
+      setTelefon("");
+      setEmail("");
+      setComment("");
+      setAgbOk(false);
+      setDsOk(false);
+      setKontaktOk(false);
+    } catch (error) {
+      console.error(error);
+      alert("Die Reservierung konnte nicht gespeichert werden.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -165,7 +204,7 @@ export default function KontaktForm() {
         </div>
 
         <button className={styles.submit} type="submit" disabled={!canSubmit}>
-          Reservieren
+          {loading ? "Wird gespeichert..." : "Reservieren"}
         </button>
       </div>
     </form>
