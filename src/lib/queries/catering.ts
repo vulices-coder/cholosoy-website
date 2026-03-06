@@ -7,5 +7,7 @@ export async function getCateringRequests() {
 }
 
 export async function getCateringRequestById(id: string) {
-  return prisma.cateringRequest.findUnique({ where: { id } });
+  return prisma.cateringRequest.findUnique({
+    where: { id },
+  });
 }
