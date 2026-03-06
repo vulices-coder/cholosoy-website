@@ -1,8 +1,11 @@
-// prisma/seed.ts
-import { prisma } from "@/lib/db";
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 async function main() {
-  // EVENTS
+  console.log("🌱 Seeding database...");
+
   await prisma.event.upsert({
     where: { slug: "opening-night" },
     update: {
@@ -20,67 +23,111 @@ async function main() {
     },
   });
 
-  // MENU
-  await prisma.menuItem.upsert({
-    where: { slug: "lomo-saltado" },
-    update: {
-      name: "Lomo Saltado",
-      description: "Clásico peruano salteado.",
-      price: 15.9,
-      category: "MAINS",
-      imageUrl: "/images/home/lomo.jpg",
+  const menuItems = [
+    {
+      slug: "ceviche-clasico",
+      name: "Ceviche Clásico",
+      description: "Fisch, Limette, Zwiebel, Mais",
+      price: 9.9,
+      category: "vorspeisen",
+      imageUrl: "/images/home/ceviche.jpg",
     },
-    create: {
-      name: "Lomo Saltado",
+    {
+      slug: "papa-rellena",
+      name: "Papa Rellena",
+      description: "Gefüllt mit Rindfleisch",
+      price: 7.5,
+      category: "vorspeisen",
+      imageUrl: "/images/home/food.jpg",
+    },
+    {
       slug: "lomo-saltado",
-      description: "Clásico peruano salteado.",
+      name: "Lomo Saltado",
+      description: "Rind, Sojasauce, Kartoffeln",
       price: 15.9,
-      category: "MAINS",
-      imageUrl: "/images/home/lomo.jpg",
+      category: "hauptspeisen",
+      imageUrl: "/images/home/food.jpg",
     },
-  });
-
-  await prisma.menuItem.upsert({
-    where: { slug: "chicha-morada" },
-    update: {
-      name: "Chicha Morada",
-      description: "Bebida tradicional.",
-      price: 4.5,
-      category: "DRINKS",
-      imageUrl: "/images/home/chicha.jpg",
+    {
+      slug: "aji-de-gallina",
+      name: "Ají de Gallina",
+      description: "Cremig, mild, mit Reis",
+      price: 14.5,
+      category: "hauptspeisen",
+      imageUrl: "/images/home/food.jpg",
     },
-    create: {
-      name: "Chicha Morada",
+    {
+      slug: "suspiro-limeno",
+      name: "Suspiro Limeño",
+      description: "Karamellcreme, Baiser",
+      price: 6.9,
+      category: "desserts",
+      imageUrl: "/images/home/food.jpg",
+    },
+    {
+      slug: "picarones",
+      name: "Picarones",
+      description: "Süße Kürbis-Donuts",
+      price: 6.5,
+      category: "desserts",
+      imageUrl: "/images/home/food.jpg",
+    },
+    {
       slug: "chicha-morada",
-      description: "Bebida tradicional.",
+      name: "Chicha Morada",
+      description: "Maisgetränk, kalt",
       price: 4.5,
-      category: "DRINKS",
-      imageUrl: "/images/home/chicha.jpg",
+      category: "getraenke",
+      imageUrl: "/images/home/pisco.jpg",
     },
-  });
+    {
+      slug: "pisco-sour",
+      name: "Pisco Sour",
+      description: "Peruanischer Klassiker",
+      price: 8.5,
+      category: "getraenke",
+      imageUrl: "/images/home/pisco.jpg",
+    },
+  ];
 
-  // GALLERY
+  for (const item of menuItems) {
+    await prisma.menuItem.upsert({
+      where: { slug: item.slug },
+      update: item,
+      create: item,
+    });
+  }
+
   await prisma.galleryImage.createMany({
     data: [
       {
-        url: "/images/gallery/1.jpg",
+        url: "/images/gallery/01.jpg",
         category: "food",
         alt: "Plato peruano",
       },
       {
-        url: "/images/gallery/2.jpg",
+        url: "/images/gallery/02.jpg",
         category: "restaurant",
-        alt: "Interior",
+        alt: "Interior del restaurante",
+      },
+      {
+        url: "/images/gallery/03.jpg",
+        category: "food",
+        alt: "Especialidad peruana",
       },
     ],
     skipDuplicates: true,
   });
+
+  console.log("✅ Seed finished");
 }
 
 main()
-  .then(() => prisma.$disconnect())
+  .then(async () => {
+    await prisma.$disconnect();
+  })
   .catch(async (e) => {
-    console.error(e);
+    console.error("❌ Seed failed:", e);
     await prisma.$disconnect();
     process.exit(1);
   });

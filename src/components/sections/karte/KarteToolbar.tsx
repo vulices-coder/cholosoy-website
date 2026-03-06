@@ -8,6 +8,7 @@ function nextOf(section: KarteSection) {
   const idx = KARTE_SECTIONS.indexOf(section);
   return KARTE_SECTIONS[(idx + 1) % KARTE_SECTIONS.length];
 }
+
 function prevOf(section: KarteSection) {
   const idx = KARTE_SECTIONS.indexOf(section);
   return KARTE_SECTIONS[(idx - 1 + KARTE_SECTIONS.length) % KARTE_SECTIONS.length];
@@ -27,13 +28,23 @@ export default function KarteToolbar({
 
   return (
     <div className={styles.bar} aria-label="Karte Toolbar">
-      <button className={styles.iconBtn} onClick={() => setZoom(Math.max(0.8, +(zoom - 0.1).toFixed(1)))} aria-label="Zoom out">
+      <button
+        type="button"
+        className={styles.iconBtn}
+        onClick={() => setZoom(Math.max(0.8, +(zoom - 0.1).toFixed(1)))}
+        aria-label="Zoom out"
+      >
         −
       </button>
 
       <div className={styles.zoomLabel}>{Math.round(zoom * 100)}%</div>
 
-      <button className={styles.iconBtn} onClick={() => setZoom(Math.min(1.4, +(zoom + 0.1).toFixed(1)))} aria-label="Zoom in">
+      <button
+        type="button"
+        className={styles.iconBtn}
+        onClick={() => setZoom(Math.min(1.4, +(zoom + 0.1).toFixed(1)))}
+        aria-label="Zoom in"
+      >
         +
       </button>
 
