@@ -5,10 +5,12 @@ export default function HomeQuote() {
   return (
     <section className={styles.section}>
       <Container size="lg">
-        <h1 className={`${styles.quote} handwritten`}>
-          „Bereise Peru mit dem Gaumen und entdecke eine neue
-          Art, die Welt zu bereisen.“
-        </h1>
+        <div className={styles.inner}>
+          <h1 className={`${styles.quote} handwritten`}>
+            „Bereise Peru mit dem Gaumen und entdecke eine neue
+            Art, die Welt zu bereisen.“
+          </h1>
+        </div>
       </Container>
     </section>
   );

@@ -2,33 +2,44 @@ import Image from "next/image";
 import Container from "@/components/ui/Container";
 import styles from "./HomeGrid.module.scss";
 
-const images = [
-  { src: "/images/home/ceviche.jpg", alt: "Ceviche" },
-  { src: "/images/home/dance.jpg", alt: "Peru Culture" },
-  { src: "/images/home/machu-picchu.jpg", alt: "Machu Picchu" },
-  { src: "/images/home/food.jpg", alt: "Peru Food" },
-  { src: "/images/home/beach.jpg", alt: "Peru Beach" },
-  { src: "/images/home/pisco.jpg", alt: "Pisco" },
-  { src: "/images/home/person.jpg", alt: "Peru People" },
-];
-
 export default function HomeGrid() {
   return (
     <section className={styles.section}>
       <Container size="lg">
-        <div className={styles.grid}>
-          {images.map((img) => (
-            <div key={img.src} className={styles.card}>
-              <Image
-                src={img.src}
-                alt={img.alt}
-                fill
-                sizes="(max-width: 900px) 100vw, 25vw"
-                className={styles.image}
-                priority={false}
-              />
+        <div className={styles.wrapper}>
+          
+          <div className={styles.rowTop}>
+            <div className={styles.cardTop}>
+              <Image src="/images/home/ceviche.jpg" alt="Ceviche" fill className={styles.image} />
             </div>
-          ))}
+
+            <div className={styles.cardTop}>
+              <Image src="/images/home/dance.jpg" alt="Peru Culture" fill className={styles.image} />
+            </div>
+
+            <div className={styles.cardTop}>
+              <Image src="/images/home/machu-picchu.jpg" alt="Machu Picchu" fill className={styles.image} />
+            </div>
+
+            <div className={styles.cardTop}>
+              <Image src="/images/home/food.jpg" alt="Peru Food" fill className={styles.image} />
+            </div>
+          </div>
+
+          <div className={styles.rowBottom}>
+            <div className={styles.cardBeach}>
+              <Image src="/images/home/beach.jpg" alt="Peru Beach" fill className={styles.image} />
+            </div>
+
+            <div className={styles.cardPisco}>
+              <Image src="/images/home/pisco.jpg" alt="Pisco" fill className={styles.image} />
+            </div>
+
+            <div className={styles.cardPeople}>
+              <Image src="/images/home/person.jpg" alt="Peru People" fill className={styles.image} />
+            </div>
+          </div>
+
         </div>
       </Container>
     </section>
