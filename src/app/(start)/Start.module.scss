@@ -4,40 +4,65 @@
   padding: 0;
 }
 
-/* =========================
-   HERO (foto + Home/Logo/Kontakt + banderas)
-   ========================= */
-.hero {
+.startBlock,
+.titleSection {
+  width: 100%;
+}
+
+/* ✅ ancho completo en móvil y laptop
+   ✅ límite solo en pantallas realmente grandes */
+.startShell {
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 1700px) {
+  .startShell {
+    max-width: var(--container-wide);
+  }
+}
+
+.heroFrame,
+.sectionFrame {
   position: relative;
   width: 100%;
-
-  /* Desktop “real” como tu screenshot */
-  aspect-ratio: 16 / 9;
-  height: auto;              /* clave: que mande el aspect-ratio */
-  min-height: 560px;
-  max-height: 860px;
-
   overflow: hidden;
   margin: 0;
 }
 
-.heroImg {
-  object-fit: cover;
-  object-position: center 18%;
+.heroFrame {
+  aspect-ratio: 1440 / 926;
 }
 
+.sectionFrame {
+  aspect-ratio: 2048 / 1292;
+}
 
-/* Top grid: Home | Logo | Kontakt */
+.heroImg {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.sectionImg {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.heroOverlay,
+.sectionOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
 .heroTop {
   position: absolute;
   top: 66px;
-  left: 0;
-  right: 0;
+  left: 44px;
+  right: 44px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: start;
-  padding: 0 44px;
-  z-index: 2;
 }
 
 .heroLogo {
@@ -45,7 +70,13 @@
   justify-content: center;
 }
 
-.heroLink {
+.heroLogoImage {
+  width: clamp(180px, 18vw, 250px);
+  height: auto;
+}
+
+.heroLink,
+.heroLinkDisabled {
   color: var(--color-white);
   text-decoration: none;
   font-weight: 700;
@@ -53,15 +84,21 @@
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
 }
 
-.heroLink:last-child {
+.heroLink:last-child,
+.heroLinkDisabled:last-child {
   text-align: right;
 }
 
-/* banderas verticales izquierda */
+.heroLinkDisabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
 .flags {
   position: absolute;
   left: 48px;
-  top: 350px;
+  top: 46%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -81,132 +118,79 @@
   }
 }
 
-/* =========================
-   BARRA AMARILLA
-   ========================= */
 .titleBar {
+  width: 100%;
   background: var(--yellow-300);
   border: 0;
-  padding: 20px 16px;
-  text-align: center;
-  margin: 0;
+  padding-block: 22px;
 }
 
 .title {
   margin: 0;
+  text-align: center;
   font-family: var(--font-handwritten);
   font-size: clamp(42px, 3vw, 64px);
   line-height: 1;
   color: var(--yellow-900);
 }
 
-/* =========================
-   SECTION 2 (foto papa + cookie card)
-   ========================= */
-.section {
-  position: relative;
-  width: 100%;
-
-  aspect-ratio: 16 / 9;
-  height: auto;
-  min-height: 560px;
-  max-height: 860px;
-
-  overflow: hidden;
-  margin: 0;
-}
-
-.sectionImg {
-  object-fit: cover;
-  object-position: 38% center; /* “papa” visible + espacio derecha */
-}
-
-
-/* ✅ Slot anclado abajo-derecha con 24px y SIN salirse */
 .cookieSlot {
   position: absolute;
   right: 24px;
   bottom: 24px;
   z-index: 5;
-
   width: clamp(250px, 20vw, 320px);
-  max-height: calc(100% - 48px); /* 24 arriba + 24 abajo */
+  max-height: calc(100% - 48px);
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
 }
 
-/* =========================
-   TABLET (<= 1024px)
-   ========================= */
 @media (max-width: 1024px) {
-  .hero {
-    min-height: 520px;
-    max-height: 760px;
+  .heroTop {
+    top: 44px;
+    left: 28px;
+    right: 28px;
   }
 
-  .heroImg {
-    object-position: center 22%;
-  }
-
-  .section {
-    min-height: 520px;
-    max-height: 760px;
-  }
-
-  .sectionImg {
-    object-position: 42% center;
+  .heroLogoImage {
+    width: clamp(150px, 20vw, 210px);
   }
 
   .flags {
     left: 22px;
-    top: 240px;
 
     a {
       font-size: 20px;
     }
   }
 
-  .heroTop {
-    top: 44px;
-    padding: 0 28px;
-  }
-}
-
-/* =========================
-   TABLET-SMALL (<= 900px)
-   ========================= */
-@media (max-width: 900px) {
   .cookieSlot {
     right: 18px;
     bottom: 18px;
-    width: min(320px, 44vw);
+    width: min(320px, 42vw);
     max-height: calc(100% - 36px);
   }
 }
 
-/* =========================
-   MOBILE (<= 700px)
-   ========================= */
 @media (max-width: 700px) {
-  .hero {
-    height: 72vh;
-    min-height: 520px;
-  }
-
-  .section {
-    height: 72vh;
-    min-height: 520px;
-  }
-
   .heroTop {
     top: 24px;
-    padding: 0 16px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .heroLogoImage {
+    width: clamp(110px, 26vw, 150px);
+  }
+
+  .heroLink,
+  .heroLinkDisabled {
+    font-size: clamp(18px, 5vw, 24px);
   }
 
   .flags {
     left: 16px;
-    top: 140px;
 
     a {
       font-size: 18px;
@@ -214,14 +198,36 @@
   }
 
   .cookieSlot {
-    left: auto;
     right: 12px;
     bottom: 12px;
-    width: 40%;
-    max-height: calc(100% - 12px);
+    width: min(220px, 48vw);
+    max-height: calc(100% - 24px);
   }
 
   .title {
     font-size: clamp(34px, 7vw, 48px);
+  }
+}
+
+@media (max-width: 520px) {
+  .heroTop {
+    top: 18px;
+  }
+
+  .heroLogoImage {
+    width: 96px;
+  }
+
+  .heroLink,
+  .heroLinkDisabled {
+    font-size: 16px;
+  }
+
+  .flags {
+    left: 12px;
+  }
+
+  .cookieSlot {
+    width: min(190px, 54vw);
   }
 }

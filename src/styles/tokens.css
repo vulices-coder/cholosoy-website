@@ -4,13 +4,13 @@
   --color-white: #ffffff;
 
   /* ===== Brand Yellow ===== */
-  --yellow-500: #ffe26f; /* principal */
-  --yellow-300: #f4d98c; /* suave */
-  --yellow-900: #574500; /* oscuro */
+  --yellow-500: #ffe26f;
+  --yellow-300: #f4d98c;
+  --yellow-900: #574500;
 
   /* ===== Brand Blue/Turquoise ===== */
-  --blue-500: #1ba8cb; /* primario */
-  --blue-600: #68b7c2; /* variante */
+  --blue-500: #1ba8cb;
+  --blue-600: #68b7c2;
 
   /* ===== Semantic ===== */
   --color-bg: var(--yellow-500);
@@ -45,7 +45,8 @@
   /* ===== Layout sizes ===== */
   --nav-height: 136px;
   --footer-height: 72px;
-  --container-max: 1200px;
+  --container-max: 1280px;
+  --container-wide: 1440px;
   --nav-icon-size: 96px;
 
   /* ===== Spacing ===== */

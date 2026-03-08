@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-xl);
+  padding-inline: var(--space-xl);
 }
 
 .md {
@@ -9,5 +9,11 @@
 }
 
 .lg {
-  max-width: 1440px; /* match del marco navbar */
+  max-width: var(--container-wide);
+}
+
+@media (max-width: 900px) {
+  .container {
+    padding-inline: var(--space-md);
+  }
 }

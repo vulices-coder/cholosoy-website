@@ -1,13 +1,15 @@
 .nav {
-  height: var(--nav-height);
+  width: 100%;
   background: var(--color-accent);
+}
+
+.navInner {
+  min-height: var(--nav-height);
   display: flex;
   align-items: center;
-  padding: 0 24px;
   gap: 24px;
 }
 
-/* Logo y avatar se quedan “fijos” */
 .logo {
   width: var(--nav-icon-size);
   height: var(--nav-icon-size);
@@ -17,102 +19,90 @@
 }
 
 .logoImage {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
-/* ✅ CLAVE: este bloque ocupa todo el espacio entre logo y avatar */
 .links {
-  flex: 1;                 /* toma el espacio central */
+  flex: 1;
   display: flex;
-  justify-content: center; /* centra los links */
+  justify-content: center;
   align-items: center;
-  gap: 32px;               /* ajustable según Figma */
-  min-width: 0;            /* evita overflow raro */
+  gap: 32px;
+  min-width: 0;
 }
 
-/* Links base */
 .links a {
   color: var(--color-white);
   text-decoration: none;
   font-weight: 600;
-  display: inline-block;          /* para que transform no “rompa” */
+  display: inline-block;
   transform-origin: center;
   transition: transform 160ms ease, color 160ms ease;
   will-change: transform;
 }
 
-/* ✅ Hover amable: agranda + cambia a amarillo */
 .links a:hover {
   color: var(--yellow-500);
   transform: scale(1.08);
 }
 
-/* (Opcional) estado activo si luego lo aplicas con aria-current */
 .links a[aria-current="page"] {
   color: var(--yellow-500);
 }
 
-/* Avatar fijo a la derecha */
 .avatar {
   width: var(--nav-icon-size);
   height: var(--nav-icon-size);
   flex: 0 0 var(--nav-icon-size);
   display: inline-block;
-
   background-color: var(--yellow-300);
-
   -webkit-mask: url("/images/brand/avatar.svg") center / contain no-repeat;
   mask: url("/images/brand/avatar.svg") center / contain no-repeat;
-
-  transform: none;
   transition: background-color 160ms ease;
 }
 
-.avatar:hover {
-  background-color: var(--color-white);
-}
-
+.avatar:hover,
 .avatar[aria-current="page"] {
   background-color: var(--color-white);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .links {
-    gap: 18px;
-  }
-  .links a:hover {
-    transform: scale(1.05);
+    gap: 22px;
   }
 }
 
 @media (max-width: 900px) {
-  .nav {
+  .navInner {
     flex-wrap: wrap;
-    height: auto;
-    padding: 12px 16px;
+    min-height: auto;
+    padding-block: 12px;
     gap: 12px;
+    align-items: center;
   }
 
-  /* reducimos tamaño de iconos en móvil */
   .logo,
   .avatar {
-    width: 64px;
+    width:64px;
     height: 64px;
-    flex: 0 0 64px;
+    flex: 0 0 62px;
+    align-self: center;
   }
 
-  /* logo queda arriba izquierda */
   .logo {
     order: 1;
   }
 
-  /* avatar arriba derecha */
   .avatar {
     order: 2;
     margin-left: auto;
+    -webkit-mask-size: 90%;
+    mask-size: 90%;
   }
 
-  /* links pasan a segunda fila, centrados */
   .links {
     order: 3;
     flex: 0 0 100%;
@@ -126,7 +116,6 @@
     font-size: 14px;
   }
 
-  /* en móvil mejor sin scale para evitar saltos/choques */
   .links a:hover {
     transform: none;
   }
@@ -136,6 +125,7 @@
   .links {
     gap: 10px;
   }
+
   .links a {
     font-size: 13px;
   }
