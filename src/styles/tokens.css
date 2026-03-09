@@ -27,7 +27,7 @@
     "Noto Sans", "Liberation Sans", sans-serif;
   --font-handwritten: cursive;
 
-  /* ===== Typography tokens (Figma-driven) ===== */
+  /* ===== Typography tokens ===== */
   --type-title-md-family: var(--font-sans);
   --type-title-md-weight: 500;
   --type-title-md-size: 24px;
@@ -43,11 +43,11 @@
   --type-handwritten-hero-family: var(--font-handwritten);
 
   /* ===== Layout sizes ===== */
-  --nav-height: 136px;
-  --footer-height: 72px;
+  --nav-height: 112px;
+  --footer-height: 56px;
   --container-max: 1280px;
   --container-wide: 1440px;
-  --nav-icon-size: 96px;
+  --nav-icon-size: 84px;
 
   /* ===== Spacing ===== */
   --space-2xs: 4px;
@@ -57,9 +57,9 @@
   --space-lg: 24px;
   --space-xl: 32px;
 
-  /* Footer padding (Figma) */
+  /* Footer padding */
   --footer-pad-x: 26px;
-  --footer-pad-y: 16px;
+  --footer-pad-y: 12px;
 
   /* ===== Radius ===== */
   --radius-sm: 6px;

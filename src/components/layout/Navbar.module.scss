@@ -7,7 +7,7 @@
   min-height: var(--nav-height);
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
 .logo {
@@ -30,7 +30,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
   min-width: 0;
 }
 
@@ -38,6 +38,7 @@
   color: var(--color-white);
   text-decoration: none;
   font-weight: 600;
+  font-size: 15px;
   display: inline-block;
   transform-origin: center;
   transition: transform 160ms ease, color 160ms ease;
@@ -69,9 +70,13 @@
   background-color: var(--color-white);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .links {
-    gap: 22px;
+    gap: 20px;
+  }
+
+  .links a {
+    font-size: 14px;
   }
 }
 
@@ -86,9 +91,9 @@
 
   .logo,
   .avatar {
-    width:64px;
+    width: 64px;
     height: 64px;
-    flex: 0 0 62px;
+    flex: 0 0 64px;
     align-self: center;
   }
 
