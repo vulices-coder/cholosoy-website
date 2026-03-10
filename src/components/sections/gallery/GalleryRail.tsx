@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import Container from "@/components/ui/Container";
 import styles from "./GalleryRail.module.scss";
 
-const images = Array.from({ length: 36 }, (_, i) => {
+const images = Array.from({ length: 34 }, (_, i) => {
   const num = String(i + 1).padStart(2, "0");
   return {
     src: `/images/gallery/${num}.png`,

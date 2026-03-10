@@ -1,102 +1,275 @@
 .section {
   background: var(--color-surface);
-  padding: 32px 0 72px;
+  padding: 0;
+}
+
+.board {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: 36px;
+  padding-right: 36px;
 }
 
 .title {
   font-family: var(--type-title-md-family);
-  font-weight: var(--type-title-md-weight);
-  font-size: var(--type-title-md-size);
-  line-height: var(--type-title-md-line);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.2;
   letter-spacing: var(--type-title-md-letter);
   text-align: center;
   color: var(--color-text);
-  margin-bottom: 29px; /* spacing Figma */
+  margin: 0 0 28px;
 }
 
 .list {
   display: grid;
-  gap: 27px;
+  gap: 12px;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 260px 757px 125px;
-  gap: 24px;
+  grid-template-columns: 1.05fr 2.8fr 0.7fr;
+  gap: 16px;
   align-items: stretch;
 }
 
-/* Imagen */
 .media {
   position: relative;
-  height: 221px;
-  border-radius: 14px;
+  height: 100%;
+  min-height: 210px;
+  border-radius: 16px;
   overflow: hidden;
   background: #eee;
 }
 
 .image {
   object-fit: cover;
+  object-position: center;
 }
 
-/* Bloque central */
 .body {
-  background: var(--yellow-300); /* #f4d98c */
-  /* o si quieres el amarillo fuerte: var(--yellow-500) */
-  padding: 16px;
+  background: var(--yellow-300);
+  padding: 18px 20px;
   display: flex;
   align-items: center;
-  height: 221px; /* si ese es el alto del bloque amarillo */
+  border-radius: 16px;
+  min-height: 210px;
 }
 
 .text {
   margin: 0;
   font-family: var(--type-title-md-family);
-  font-weight: var(--type-title-md-weight);
-  font-size: var(--type-title-md-size);
-  line-height: 1.35;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.45;
   letter-spacing: var(--type-title-md-letter);
   color: var(--color-text);
 }
 
-/* Fecha */
+.text strong {
+  font-weight: 700;
+}
+
 .dateBox {
-  width: 125px;
-  height: 221px; /* igual al bloque amarillo */
   background: var(--blue-500);
-  border: 2px solid var(--color-black);
+  border-radius: 16px;
+  height: 100%;
+  min-height: 210px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 12px;
 }
 
 .date {
   font-family: var(--type-date-family);
-  font-weight: var(--type-date-weight);
-  font-size: 20px; /* antes 26 */
+  font-weight: 700;
+  font-size: 22px;
   line-height: 1.2;
-  letter-spacing: var(--type-date-letter);
+  text-align: center;
   color: var(--color-white);
 }
 
-/* Responsive */
-@media (max-width: 1100px) {
-  .row {
-  display: grid;
-  grid-template-columns: 260px 757px 125px;
-  gap: 24px;
-  align-items: center; /* antes: stretch */
-}
+/* LARGE DESKTOP */
+@media (min-width: 1600px) {
+  .board {
+    max-width: 1320px;
+  }
 
-.media,
+  .title {
+    font-size: 32px;
+    margin-bottom: 32px;
+  }
+
+  .list {
+    gap: 24px;
+  }
+
+  .row {
+    grid-template-columns: 1.05fr 2.8fr 0.7fr;
+    gap: 18px;
+  }
+
+  .media,
   .body,
   .dateBox {
-    width: 100%;
-    height: auto;
-    min-height: 120px;
+    min-height: 230px;
+  }
+
+  .text {
+    font-size: 19px;
+  }
+
+  .date {
+    font-size: 24px;
+  }
+}
+
+/* MEDIUM DESKTOP / LAPTOP */
+@media (max-width: 1400px) {
+  .board {
+    max-width: 1180px;
+  }
+
+  .row {
+    grid-template-columns: 1fr 2.6fr 0.8fr;
+    gap: 14px;
+  }
+
+  .media,
+  .body,
+  .dateBox {
+    min-height: 205px;
+  }
+
+  .body {
+    padding: 16px 18px;
+  }
+
+  .text {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .date {
+    font-size: 20px;
+  }
+}
+
+/* MACBOOK 14" */
+@media (max-width: 1512px) and (max-height: 1000px) {
+  .board {
+    max-width: 1120px;
+  }
+
+  .title {
+    margin-bottom: 22px;
+  }
+
+  .list {
+    gap: 18px;
+  }
+
+  .row {
+    gap: 12px;
+  }
+
+  .media,
+  .body,
+  .dateBox {
+    min-height: 190px;
+  }
+
+  .text {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .date {
+    font-size: 18px;
+  }
+}
+
+/* TABLET */
+@media (max-width: 1100px) {
+  .board {
+    max-width: 920px;
+  }
+
+  .title {
+    font-size: 28px;
+    margin-bottom: 22px;
+  }
+
+  .list {
+    gap: 18px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .media {
+    min-height: 240px;
+  }
+
+  .body {
+    min-height: auto;
+    padding: 16px;
   }
 
   .dateBox {
-    height: 60px;
+    min-height: 72px;
+    padding: 10px 14px;
+  }
+
+  .date {
+    font-size: 20px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  .board {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  .list {
+    gap: 16px;
+  }
+
+  .row {
+    gap: 10px;
+  }
+
+  .media {
+    min-height: 200px;
+    border-radius: 14px;
+  }
+
+  .body {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .dateBox {
+    min-height: 60px;
+    border-radius: 14px;
+  }
+
+  .text {
+    font-size: 15px;
+    line-height: 1.38;
+  }
+
+  .date {
+    font-size: 18px;
   }
 }

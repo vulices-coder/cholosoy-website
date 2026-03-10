@@ -1,0 +1,56 @@
+.page {
+  width: 100%;
+  flex: 1;
+  display: flex;
+}
+
+.content {
+  width: 100%;
+  min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 26px;
+  padding-bottom: 26px;
+}
+
+/* LARGE DESKTOP */
+@media (min-width: 1600px) {
+  .content {
+    padding-top: 34px;
+    padding-bottom: 34px;
+  }
+}
+
+/* MEDIUM DESKTOP / LAPTOP */
+@media (max-width: 1400px) {
+  .content {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+}
+
+/* MACBOOK 14" */
+@media (max-width: 1512px) and (max-height: 1000px) {
+  .content {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+/* TABLET */
+@media (max-width: 1100px) {
+  .content {
+    min-height: auto;
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  .content {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+}
