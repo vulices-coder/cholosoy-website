@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./ReservationCard.module.scss";
 
 type Reservation = {
@@ -13,6 +13,20 @@ type Reservation = {
 };
 
 const STORAGE_KEY = "cholosoy_reservation_selection";
+const OPEN_TIME = "12:00";
+const CLOSE_TIME = "22:00";
+
+function getTomorrowDateString() {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+
+  const year = tomorrow.getFullYear();
+  const month = String(tomorrow.getMonth() + 1).padStart(2, "0");
+  const day = String(tomorrow.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
 
 function toDateLabel(date: string) {
   if (!date) return "";
@@ -30,47 +44,83 @@ function toDateLabel(date: string) {
 
 function toTimeLabel(time: string) {
   if (!time) return "";
-  return `${time} bis 18:00`;
+  return `${time} bis ${CLOSE_TIME}`;
+}
+
+function clampTimeToKitchenHours(time: string) {
+  if (!time) return OPEN_TIME;
+  if (time < OPEN_TIME) return OPEN_TIME;
+  if (time > CLOSE_TIME) return CLOSE_TIME;
+  return time;
 }
 
 export default function ReservationCard({ reservation }: { reservation: Reservation }) {
+  const tomorrow = useMemo(() => getTomorrowDateString(), []);
+
   const [isEditing, setIsEditing] = useState(false);
-  const [guests, setGuests] = useState(reservation.guests);
-  const [date, setDate] = useState(reservation.date);
-  const [time, setTime] = useState(reservation.time);
+  const [guests, setGuests] = useState(reservation.guests || 2);
+  const [date, setDate] = useState(tomorrow);
+  const [time, setTime] = useState(OPEN_TIME);
   const [confirmed, setConfirmed] = useState(true);
+  const [warning, setWarning] = useState("");
 
   useEffect(() => {
     const saved = sessionStorage.getItem(STORAGE_KEY);
+
     if (!saved) {
       sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
-          guests: reservation.guests,
-          date: reservation.date,
-          time: reservation.time,
+          guests: reservation.guests || 2,
+          date: tomorrow,
+          time: OPEN_TIME,
         })
       );
+      setGuests(reservation.guests || 2);
+      setDate(tomorrow);
+      setTime(OPEN_TIME);
       return;
     }
 
     try {
       const parsed = JSON.parse(saved);
-      setGuests(parsed.guests ?? reservation.guests);
-      setDate(parsed.date ?? reservation.date);
-      setTime(parsed.time ?? reservation.time);
-    } catch {}
-  }, [reservation]);
+
+      setGuests(parsed.guests ?? reservation.guests ?? 2);
+      setDate(parsed.date ?? tomorrow);
+      setTime(clampTimeToKitchenHours(parsed.time ?? OPEN_TIME));
+    } catch {
+      setGuests(reservation.guests || 2);
+      setDate(tomorrow);
+      setTime(OPEN_TIME);
+    }
+  }, [reservation, tomorrow]);
 
   function save() {
+    const normalizedGuests = Math.max(1, Number(guests) || 1);
+    const normalizedDate = date || tomorrow;
+    const normalizedTime = clampTimeToKitchenHours(time || OPEN_TIME);
+
+    if (time > CLOSE_TIME) {
+      setWarning(`Reservierungen sind nur bis ${CLOSE_TIME} Uhr möglich. Die Uhrzeit wurde angepasst.`);
+    } else if (time < OPEN_TIME) {
+      setWarning(`Reservierungen beginnen ab ${OPEN_TIME} Uhr. Die Uhrzeit wurde angepasst.`);
+    } else {
+      setWarning("");
+    }
+
+    setGuests(normalizedGuests);
+    setDate(normalizedDate);
+    setTime(normalizedTime);
+
     sessionStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
-        guests,
-        date,
-        time,
+        guests: normalizedGuests,
+        date: normalizedDate,
+        time: normalizedTime,
       })
     );
+
     setIsEditing(false);
   }
 
@@ -114,6 +164,7 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
             <input
               className={styles.inlineInput}
               type="date"
+              min={tomorrow}
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
@@ -128,14 +179,29 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
             <input
               className={styles.inlineInput}
               type="time"
+              min={OPEN_TIME}
+              max={CLOSE_TIME}
+              step={1800}
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={(e) => {
+                setTime(e.target.value);
+
+                if (e.target.value > CLOSE_TIME) {
+                  setWarning(`Reservierungen sind nur bis ${CLOSE_TIME} Uhr möglich.`);
+                } else if (e.target.value < OPEN_TIME) {
+                  setWarning(`Reservierungen beginnen ab ${OPEN_TIME} Uhr.`);
+                } else {
+                  setWarning("");
+                }
+              }}
             />
           ) : (
             <strong className={styles.value}>{toTimeLabel(time) || reservation.timeLabel}</strong>
           )}
         </div>
       </div>
+
+      {warning ? <p className={styles.warning}>{warning}</p> : null}
 
       <div className={styles.bottomRow}>
         <button

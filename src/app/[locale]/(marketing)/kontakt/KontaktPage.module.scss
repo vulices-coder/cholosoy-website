@@ -1,13 +1,13 @@
 .page {
   padding: 32px 0 72px;
-  background: var(--color-surface); /* blanco, como todas menos Startseite */
+  background: var(--color-surface);
 }
 
 .grid {
   width: min(var(--container-max), calc(100% - 48px));
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 360px minmax(0, 1fr);
   gap: 32px;
   align-items: start;
 }
@@ -15,5 +15,7 @@
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
+    width: min(var(--container-max), calc(100% - 28px));
+    gap: 22px;
   }
 }

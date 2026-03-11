@@ -1,15 +1,19 @@
 .card {
   position: relative;
-  background: var(--color-footer-bg); /* amarillo suave */
+  background: var(--color-footer-bg);
   border-radius: 14px;
   padding: 18px;
   min-height: 360px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 18px;
 }
 
-.header {
+.topRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .title {
@@ -19,24 +23,28 @@
   font-size: 18px;
 }
 
-.badge {
+.sub {
+  margin: 6px 0 0;
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+.change {
   font-size: 12px;
   text-decoration: underline;
   cursor: pointer;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--color-text);
 }
 
-.info {
-  margin-top: 16px;
+.items {
   display: grid;
   gap: 14px;
 }
 
-.note {
-  margin: 0;
-  font-size: 12px;
-}
-
-.row {
+.item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -48,18 +56,74 @@
   text-align: center;
 }
 
-.to {
-  opacity: 0.7;
+.value {
+  font-size: 16px;
 }
 
-.whatsapp {
-  position: absolute;
-  left: 18px;
-  bottom: 18px;
-  width: 36px;
+.inlineInput {
   height: 36px;
+  min-width: 160px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  padding: 0 10px;
+  font: inherit;
+  background: var(--color-white);
+}
+
+.warning {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 92, 92, 0.12);
+  color: #8a1f1f;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: auto;
+}
+
+.confirm {
+  width: 42px;
+  height: 42px;
   border-radius: 999px;
   border: 1px solid #000;
   background: var(--color-surface);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dotOn,
+.dotOff {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.dotOn {
+  background: #111;
+}
+
+.dotOff {
+  background: transparent;
+  border: 1px solid #111;
+}
+
+.save {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  font-weight: 700;
   cursor: pointer;
 }

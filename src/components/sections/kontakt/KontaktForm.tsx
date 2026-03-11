@@ -21,6 +21,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
   const [dsOk, setDsOk] = useState(false);
   const [kontaktOk, setKontaktOk] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const isEmailValid = (value: string) => /\S+@\S+\.\S+/.test(value);
 
@@ -73,7 +74,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
         locale,
       });
 
-      alert("Danke! Wir haben Ihre Reservierung erhalten.");
+      sessionStorage.removeItem(STORAGE_KEY);
 
       setVorname("");
       setNachname("");
@@ -83,6 +84,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
       setAgbOk(false);
       setDsOk(false);
       setKontaktOk(false);
+      setSubmitted(true);
     } catch (error) {
       console.error(error);
       alert("Die Reservierung konnte nicht gespeichert werden.");
@@ -91,12 +93,24 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
     }
   }
 
+  if (submitted) {
+    return (
+      <section className={styles.successBox}>
+        <h2 className={styles.successTitle}>Danke für Ihre Reservierung</h2>
+        <p className={styles.successText}>
+          Wir haben Ihre Anfrage erhalten und melden uns so schnell wie möglich bei Ihnen.
+        </p>
+      </section>
+    );
+  }
+
   return (
     <form className={styles.form} onSubmit={onSubmit}>
       <h2 className={styles.title}>Kontakt</h2>
 
       <fieldset className={styles.fieldset}>
-        <legend className={styles.label}>Anrede</legend>
+        <legend className={styles.legend}>Anrede</legend>
+
         <label className={styles.radio}>
           <input
             type="radio"
@@ -106,6 +120,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
           />
           Frau
         </label>
+
         <label className={styles.radio}>
           <input
             type="radio"
@@ -115,6 +130,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
           />
           Herr
         </label>
+
         <label className={styles.radio}>
           <input
             type="radio"
@@ -149,6 +165,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
           <label className={styles.label}>Telefon</label>
           <input
             className={styles.input}
+            type="tel"
             value={telefon}
             onChange={(e) => setTelefon(e.target.value)}
           />
@@ -158,6 +175,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
           <label className={styles.label}>E-Mail</label>
           <input
             className={styles.input}
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -185,6 +203,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
             />
             Ich akzeptiere die Allgemeinen Geschäftsbedingungen
           </label>
+
           <label className={styles.check}>
             <input
               type="checkbox"
@@ -193,6 +212,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
             />
             Ich bestätige die Datenschutzbestimmungen
           </label>
+
           <label className={styles.check}>
             <input
               type="checkbox"
