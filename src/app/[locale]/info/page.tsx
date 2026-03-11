@@ -6,7 +6,13 @@ export const metadata = {
   description: "Kontaktieren Sie das CholoSoy Restaurant in Berlin.",
 };
 
-export default function InfoPage() {
+export default async function InfoPage({
+  params,
+}: {
+  params: Promise<{ locale: "de" | "es" | "en" }>;
+}) {
+  const { locale } = await params;
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
@@ -16,7 +22,7 @@ export default function InfoPage() {
           Schreiben Sie uns gerne. Wir melden uns so schnell wie möglich bei Ihnen.
         </p>
 
-        <InfoForm />
+        <InfoForm locale={locale} />
       </div>
     </main>
   );
