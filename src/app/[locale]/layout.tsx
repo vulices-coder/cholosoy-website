@@ -1,5 +1,6 @@
 // src/app/[locale]/layout.tsx
 import type { ReactNode } from "react";
+import CookieBanner from "@/components/legal/CookieBanner";
 
 type Locale = "de" | "es" | "en";
 
@@ -11,12 +12,18 @@ export default async function LocaleLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ locale: string }>;
 }) {
   const { locale: raw } = await params;
-  const locale = ["de", "es", "en"].includes(raw) ? raw : "de";
+  const locale = sanitizeLocale(raw);
 
-  // OJO: aquí NO pongas <html>/<body> si ya lo haces en RootLayout global
-  return <>{children}</>;
+  void locale;
+
+  return (
+    <>
+      {children}
+      <CookieBanner />
+    </>
+  );
 }

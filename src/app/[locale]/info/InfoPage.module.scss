@@ -1,0 +1,50 @@
+.page {
+  padding: 64px 0 80px;
+  background: var(--color-surface);
+}
+
+.container {
+  width: min(var(--container-max), calc(100% - 48px));
+  margin: 0 auto;
+  max-width: 760px;
+  display: grid;
+  gap: 22px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--type-title-md-family);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.subtitle {
+  margin: 0;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  opacity: 0.85;
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 40px 0 56px;
+  }
+
+  .container {
+    width: min(var(--container-max), calc(100% - 28px));
+    gap: 18px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+}
