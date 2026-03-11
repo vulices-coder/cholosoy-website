@@ -1,22 +1,21 @@
 .sheetWrap {
-  width: min(420px, 92vw);
+  width: min(430px, 92vw);
 }
 
 .sheet {
   background: var(--color-surface);
   border-radius: 8px;
-  padding: 18px 18px 70px;
+  padding: 18px 18px 74px;
   position: relative;
-
-  /* Zoom MVP: escala SOLO el contenido interno visual */
   transform: scale(var(--zoom));
   transform-origin: top center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
 .header {
   display: flex;
   justify-content: center;
-  padding-top: 6px;
+  padding-top: 4px;
 }
 
 .logo {
@@ -24,11 +23,27 @@
 }
 
 .title {
-  margin: 14px 0 12px;
+  margin: 14px 0 14px;
   text-align: center;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.28em;
   font-weight: 700;
   font-size: 12px;
+}
+
+.groupedMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groupLabel {
+  margin: 8px 0 2px;
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px dashed rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
 }
 
 .list {
@@ -38,24 +53,31 @@
 }
 
 .item {
-  display: flex;
-  gap: 10px;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .left {
-  flex: 1;
+  width: 100%;
+}
+
+.itemHead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
 }
 
 .name {
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .desc {
   font-size: 11px;
-  opacity: 0.8;
+  line-height: 1.25;
+  opacity: 0.84;
   margin-top: 2px;
 }
 
@@ -63,6 +85,14 @@
   font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
+  line-height: 1.2;
+}
+
+.empty {
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.7;
+  padding: 16px 0;
 }
 
 .toolbarDock {
@@ -70,4 +100,32 @@
   left: 50%;
   bottom: 16px;
   transform: translateX(-50%);
+}
+
+@media (max-width: 480px) {
+  .sheetWrap {
+    width: min(400px, 94vw);
+  }
+
+  .sheet {
+    padding: 16px 16px 72px;
+  }
+
+  .title {
+    letter-spacing: 0.22em;
+    font-size: 11px;
+  }
+
+  .name,
+  .price {
+    font-size: 11px;
+  }
+
+  .desc {
+    font-size: 10px;
+  }
+
+  .groupLabel {
+    font-size: 10px;
+  }
 }
