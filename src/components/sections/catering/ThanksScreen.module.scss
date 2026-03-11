@@ -4,15 +4,9 @@
   display: grid;
   place-items: center;
   padding: 40px 16px;
-}
-
-.stack {
-  width: 100%;
-  max-width: 920px;
-  display: grid;
-  place-items: center;
   text-align: center;
-  gap: 36px;
+  position: relative;
+  gap: 24px;
 }
 
 .quote {
@@ -23,7 +17,7 @@
   color: var(--color-text);
 }
 
-.sub {
+.thanks {
   margin: 0;
   font-family: var(--font-handwritten);
   font-size: 46px;
@@ -35,6 +29,9 @@
   width: 160px;
   height: 160px;
   margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .back {
@@ -51,11 +48,18 @@
   .quote {
     font-size: 40px;
   }
-  .sub {
+
+  .thanks {
     font-size: 34px;
   }
+
   .logo {
     width: 140px;
     height: 140px;
+  }
+
+  .back {
+    left: 18px;
+    bottom: 18px;
   }
 }

@@ -4,22 +4,36 @@
   padding: 48px 64px 40px;
 }
 
+.form {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  background: var(--color-surface);
+  padding: 32px;
+  border-radius: 12px;
+  display: grid;
+  gap: 22px;
+}
+
 .title {
-  margin: 0 0 18px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--color-text);
+}
+
+.subtitle {
+  margin: 8px 0 0;
   font-family: var(--font-sans);
   font-weight: 700;
   font-size: 18px;
   color: var(--color-text);
 }
 
-.section {
-  margin-top: 18px;
-}
-
 .label {
-  margin: 0 0 10px;
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 13px;
   color: var(--color-text);
 }
@@ -31,8 +45,7 @@
   align-items: center;
 }
 
-.radio,
-.check {
+.row label {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -41,78 +54,87 @@
   color: var(--color-text);
 }
 
-.radio input,
-.check input {
+.row input[type="radio"],
+.row input[type="checkbox"] {
   width: 14px;
   height: 14px;
 }
 
-.lineInput {
-  height: 20px;
-  min-width: 240px;
-  border: none;
-  border-bottom: 1px solid #111;
-  background: transparent;
-  outline: none;
-  padding: 0 6px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-}
-
-.inlineGrid {
-  display: grid;
-  grid-template-columns: 1fr 120px 120px 120px;
-  gap: 18px;
-  align-items: end;
-  margin-top: 12px;
-}
-
-.smallField {
-  display: grid;
-  gap: 6px;
-}
-
-.smallLabel {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  color: var(--color-text);
-}
-
-.smallInput {
-  height: 22px;
-  border: none;
-  border-bottom: 1px solid #111;
-  background: transparent;
-  outline: none;
-  padding: 0 6px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-}
-
-.next {
-  position: fixed;
-  right: 34px;
-  bottom: 34px;
+.inlineOther {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.row2 label,
+.full {
+  display: grid;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+.row2 input,
+.lineInput,
+.lineInputFull {
+  height: 40px;
+  border: 1px solid #111;
+  border-radius: 6px;
+  background: var(--color-white);
+  outline: none;
+  padding: 0 12px;
   font-family: var(--font-sans);
   font-size: 14px;
-  color: var(--color-text);
-  text-decoration: none;
+}
+
+.full {
+  width: 100%;
+}
+
+.lineInput {
+  min-width: 180px;
+}
+
+.lineInputFull {
+  width: 100%;
+}
+
+.next {
+  justify-self: end;
+  min-width: 140px;
+  height: 40px;
+  border: 1px solid #111;
+  border-radius: 6px;
+  background: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 @media (max-width: 900px) {
   .page {
     padding: 28px 18px 24px;
   }
-  .inlineGrid {
+
+  .form {
+    padding: 22px 18px;
+    gap: 18px;
+  }
+
+  .row2 {
     grid-template-columns: 1fr;
   }
+
   .next {
-    position: static;
-    margin-top: 24px;
-    justify-content: flex-end;
-    display: flex;
+    justify-self: stretch;
   }
 }
