@@ -1,15 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { createInfoRequest } from "@/actions/info";
 import styles from "./InfoForm.module.scss";
 
-export default function InfoForm() {
+type Locale = "de" | "es" | "en";
+
+export default function InfoForm({ locale = "de" as Locale }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [reason, setReason] = useState("");
   const [message, setMessage] = useState("");
   const [privacyOk, setPrivacyOk] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isEmailValid = (value: string) => /\S+@\S+\.\S+/.test(value);
 
@@ -19,20 +23,38 @@ export default function InfoForm() {
       isEmailValid(email) &&
       reason.trim().length > 1 &&
       message.trim().length > 5 &&
-      privacyOk
+      privacyOk &&
+      !loading
     );
-  }, [name, email, reason, message, privacyOk]);
+  }, [name, email, reason, message, privacyOk, loading]);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!canSubmit) return;
 
-    setSubmitted(true);
-    setName("");
-    setEmail("");
-    setReason("");
-    setMessage("");
-    setPrivacyOk(false);
+    try {
+      setLoading(true);
+
+      await createInfoRequest({
+        name,
+        email,
+        reason,
+        message,
+        locale,
+      });
+
+      setSubmitted(true);
+      setName("");
+      setEmail("");
+      setReason("");
+      setMessage("");
+      setPrivacyOk(false);
+    } catch (error) {
+      console.error(error);
+      alert("Die Nachricht konnte nicht gespeichert werden.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -112,7 +134,7 @@ export default function InfoForm() {
       </label>
 
       <button className={styles.submit} type="submit" disabled={!canSubmit}>
-        Senden
+        {loading ? "Wird gesendet..." : "Senden"}
       </button>
     </form>
   );
