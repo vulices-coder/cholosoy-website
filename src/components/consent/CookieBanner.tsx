@@ -25,16 +25,25 @@ export default function CookieBanner() {
   return (
     <div className={styles.banner} role="dialog" aria-label="Cookie-Banner">
       <p className={styles.text}>
-        Wir verwenden Cookies, um die Nutzung unserer Website zu verbessern. Weitere Informationen
-        finden Sie in unserer Datenschutzerklärung.
+        Wir verwenden Cookies, um die Nutzung unserer Website zu verbessern. 
+        Einige Cookies sind notwendig für den Betrieb der Seite.
       </p>
 
       <div className={styles.actions}>
-        <button type="button" className={styles.secondary} onClick={closeBanner}>
-          Schließen
+        <button
+          type="button"
+          className={styles.secondary}
+          onClick={closeBanner}
+        >
+          Nur notwendige Cookies
         </button>
-        <button type="button" className={styles.primary} onClick={closeBanner}>
-          Akzeptieren
+
+        <button
+          type="button"
+          className={styles.primary}
+          onClick={closeBanner}
+        >
+          Alle Cookies akzeptieren
         </button>
       </div>
     </div>
