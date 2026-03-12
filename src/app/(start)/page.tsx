@@ -39,8 +39,6 @@ export default async function StartPage() {
   const locale = await getLocaleFromCookie();
   const t = getStartDict(locale);
 
-  const accepted = true;
-
   return (
     <main className={styles.page}>
       <section className={styles.startBlock}>
@@ -57,13 +55,9 @@ export default async function StartPage() {
 
             <div className={styles.heroOverlay}>
               <div className={styles.heroTop}>
-                {accepted ? (
-                  <Link className={styles.heroLink} href={`/${locale}/home`}>
-                    {t.home}
-                  </Link>
-                ) : (
-                  <span className={styles.heroLinkDisabled}>{t.home}</span>
-                )}
+                <Link className={styles.heroLink} href={`/${locale}/home`}>
+                  {t.home}
+                </Link>
 
                 <div className={styles.heroLogo}>
                   <Image
@@ -76,13 +70,9 @@ export default async function StartPage() {
                   />
                 </div>
 
-                {accepted ? (
-                  <Link className={styles.heroLink} href={`/${locale}/kontakt`}>
-                    {t.kontakt}
-                  </Link>
-                ) : (
-                  <span className={styles.heroLinkDisabled}>{t.kontakt}</span>
-                )}
+                <Link className={styles.heroLink} href={`/${locale}/kontakt`}>
+                  {t.kontakt}
+                </Link>
               </div>
 
               <div className={styles.flags} aria-label="Language switcher">

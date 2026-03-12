@@ -1,6 +1,5 @@
 // src/app/[locale]/layout.tsx
 import type { ReactNode } from "react";
-// import CookieBanner from "@/components/consent/CookieBanner";
 
 type Locale = "de" | "es" | "en";
 
@@ -23,7 +22,6 @@ export default async function LocaleLayout({
   return (
     <>
       {children}
-      {/* <CookieBanner /> */}
     </>
   );
 }
