@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./ServicePlanForm.module.scss";
 
+type Locale = "de" | "es" | "en";
+
 type CateringEventData = {
   eventType: string;
   eventTypeOther: string;
@@ -20,8 +22,126 @@ type CateringEventData = {
 
 const STORAGE_KEY = "cholosoy_catering_event";
 
+function readLocaleCookie(): Locale {
+  if (typeof document === "undefined") return "de";
+  const m = document.cookie.match(/(?:^|;\s*)cholosoy_locale=([^;]+)/);
+  const raw = m ? decodeURIComponent(m[1]).toLowerCase() : "de";
+  if (raw === "de" || raw === "es" || raw === "en") return raw;
+  return "de";
+}
+
+const SERVICE_DICT: Record<
+  Locale,
+  {
+    title: string;
+    eventType: string;
+    wedding: string;
+    birthday: string;
+    company: string;
+    other: string;
+    eventDate: string;
+    eventTime: string;
+    guests: string;
+    location: string;
+    cateringPref: string;
+    serviceType: string;
+    buffet: string;
+    menuService: string;
+    cocktail: string;
+    kitchenStyle: string;
+    traditional: string;
+    modern: string;
+    drinks: string;
+    softdrinks: string;
+    openBar: string;
+    wineBeer: string;
+    allergies: string;
+    next: string;
+  }
+> = {
+  de: {
+    title: "Veranstaltungsdetails (Service Plan)",
+    eventType: "Art der Veranstaltung",
+    wedding: "Hochzeit",
+    birthday: "Geburtstag",
+    company: "Firmen Event",
+    other: "Sonstiges",
+    eventDate: "Daten der Veranstaltung*",
+    eventTime: "Uhrzeit*",
+    guests: "Anzahl der Gäste*",
+    location: "Adresse der Veranstaltung*",
+    cateringPref: "Catering Präferenz",
+    serviceType: "Service Art",
+    buffet: "Buffet",
+    menuService: "Menü Service",
+    cocktail: "Cocktail Empfang",
+    kitchenStyle: "Küchenstil",
+    traditional: "Menü Peruanischer Traditionell",
+    modern: "Menü Peruanischer Modern",
+    drinks: "Getränke",
+    softdrinks: "Softdrinks",
+    openBar: "Open Bar",
+    wineBeer: "Wein/Bier",
+    allergies: "Allergie oder Einschränkungen",
+    next: "Weiter →",
+  },
+  es: {
+    title: "Detalles del evento (plan de servicio)",
+    eventType: "Tipo de evento",
+    wedding: "Boda",
+    birthday: "Cumpleaños",
+    company: "Evento empresarial",
+    other: "Otro",
+    eventDate: "Fecha del evento*",
+    eventTime: "Hora*",
+    guests: "Número de invitados*",
+    location: "Dirección del evento*",
+    cateringPref: "Preferencias de catering",
+    serviceType: "Tipo de servicio",
+    buffet: "Buffet",
+    menuService: "Servicio de menú",
+    cocktail: "Recepción con cóctel",
+    kitchenStyle: "Estilo de cocina",
+    traditional: "Menú peruano tradicional",
+    modern: "Menú peruano moderno",
+    drinks: "Bebidas",
+    softdrinks: "Refrescos",
+    openBar: "Barra libre",
+    wineBeer: "Vino/Cerveza",
+    allergies: "Alergias o restricciones",
+    next: "Continuar →",
+  },
+  en: {
+    title: "Event details (service plan)",
+    eventType: "Type of event",
+    wedding: "Wedding",
+    birthday: "Birthday",
+    company: "Corporate event",
+    other: "Other",
+    eventDate: "Event date*",
+    eventTime: "Time*",
+    guests: "Number of guests*",
+    location: "Event address*",
+    cateringPref: "Catering preferences",
+    serviceType: "Service type",
+    buffet: "Buffet",
+    menuService: "Menu service",
+    cocktail: "Cocktail reception",
+    kitchenStyle: "Cuisine style",
+    traditional: "Traditional Peruvian menu",
+    modern: "Modern Peruvian menu",
+    drinks: "Drinks",
+    softdrinks: "Soft drinks",
+    openBar: "Open bar",
+    wineBeer: "Wine/Beer",
+    allergies: "Allergies or restrictions",
+    next: "Next →",
+  },
+};
+
 export default function ServicePlanForm() {
   const router = useRouter();
+  const [locale, setLocale] = useState<Locale>("de");
   const [form, setForm] = useState<CateringEventData>({
     eventType: "Hochzeit",
     eventTypeOther: "",
@@ -37,6 +157,8 @@ export default function ServicePlanForm() {
   });
 
   useEffect(() => {
+    setLocale(readLocaleCookie());
+
     const saved = sessionStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
@@ -45,9 +167,9 @@ export default function ServicePlanForm() {
     }
   }, []);
 
-  function onTextChange(
-    e: React.ChangeEvent<HTMLInputElement>
-  ) {
+  const t = SERVICE_DICT[locale];
+
+  function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
@@ -79,49 +201,49 @@ export default function ServicePlanForm() {
   return (
     <main className={styles.page}>
       <form className={styles.form} onSubmit={onNext}>
-        <h1 className={styles.title}>Veranstaltungsdetails (Service Plan)</h1>
+        <h1 className={styles.title}>{t.title}</h1>
 
         <div className={styles.row}>
-          <span className={styles.label}>Art der Veranstaltung</span>
+          <span className={styles.label}>{t.eventType}</span>
           <label>
             <input
               type="radio"
               name="eventType"
-              value="Hochzeit"
-              checked={form.eventType === "Hochzeit"}
+              value={t.wedding}
+              checked={form.eventType === t.wedding}
               onChange={onRadioChange}
             />
-            Hochzeit
+            {t.wedding}
           </label>
           <label>
             <input
               type="radio"
               name="eventType"
-              value="Geburtstag"
-              checked={form.eventType === "Geburtstag"}
+              value={t.birthday}
+              checked={form.eventType === t.birthday}
               onChange={onRadioChange}
             />
-            Geburtstag
+            {t.birthday}
           </label>
           <label>
             <input
               type="radio"
               name="eventType"
-              value="Firmen Event"
-              checked={form.eventType === "Firmen Event"}
+              value={t.company}
+              checked={form.eventType === t.company}
               onChange={onRadioChange}
             />
-            Firmen Event
+            {t.company}
           </label>
           <label className={styles.inlineOther}>
             <input
               type="radio"
               name="eventType"
-              value="Sonstiges"
-              checked={form.eventType === "Sonstiges"}
+              value={t.other}
+              checked={form.eventType === t.other}
               onChange={onRadioChange}
             />
-            Sonstiges
+            {t.other}
             <input
               type="text"
               name="eventTypeOther"
@@ -134,7 +256,7 @@ export default function ServicePlanForm() {
 
         <div className={styles.row2}>
           <label>
-            Daten der Veranstaltung*
+            {t.eventDate}
             <input
               name="eventDate"
               type="date"
@@ -144,7 +266,7 @@ export default function ServicePlanForm() {
             />
           </label>
           <label>
-            Uhrzeit*
+            {t.eventTime}
             <input
               name="eventTime"
               type="time"
@@ -154,7 +276,7 @@ export default function ServicePlanForm() {
             />
           </label>
           <label>
-            Anzahl der Gäste*
+            {t.guests}
             <input
               name="people"
               type="number"
@@ -167,7 +289,7 @@ export default function ServicePlanForm() {
         </div>
 
         <label className={styles.full}>
-          Adresse der Veranstaltung*
+          {t.location}
           <input
             name="location"
             type="text"
@@ -178,79 +300,79 @@ export default function ServicePlanForm() {
           />
         </label>
 
-        <h2 className={styles.subtitle}>Catering Präferenz</h2>
+        <h2 className={styles.subtitle}>{t.cateringPref}</h2>
 
         <div className={styles.row}>
-          <span className={styles.label}>Service Art</span>
+          <span className={styles.label}>{t.serviceType}</span>
           <label>
             <input
               type="checkbox"
-              value="Buffet"
-              checked={form.serviceType.includes("Buffet")}
+              value={t.buffet}
+              checked={form.serviceType.includes(t.buffet)}
               onChange={(e) => onCheckboxArrayChange(e, "serviceType")}
             />
-            Buffet
+            {t.buffet}
           </label>
           <label>
             <input
               type="checkbox"
-              value="Menü Service"
-              checked={form.serviceType.includes("Menü Service")}
+              value={t.menuService}
+              checked={form.serviceType.includes(t.menuService)}
               onChange={(e) => onCheckboxArrayChange(e, "serviceType")}
             />
-            Menü Service
+            {t.menuService}
           </label>
           <label>
             <input
               type="checkbox"
-              value="Cocktail Empfang"
-              checked={form.serviceType.includes("Cocktail Empfang")}
+              value={t.cocktail}
+              checked={form.serviceType.includes(t.cocktail)}
               onChange={(e) => onCheckboxArrayChange(e, "serviceType")}
             />
-            Cocktail Empfang
+            {t.cocktail}
           </label>
           <label>
             <input
               type="checkbox"
-              value="Sonstiges"
-              checked={form.serviceType.includes("Sonstiges")}
+              value={t.other}
+              checked={form.serviceType.includes(t.other)}
               onChange={(e) => onCheckboxArrayChange(e, "serviceType")}
             />
-            Sonstiges
+            {t.other}
           </label>
         </div>
 
         <div className={styles.row}>
-          <span className={styles.label}>Küchenstil</span>
+          <span className={styles.label}>{t.kitchenStyle}</span>
           <label>
             <input
               type="radio"
               name="kitchenStyle"
-              value="Menü Peruanischer Traditionell"
-              checked={form.kitchenStyle === "Menü Peruanischer Traditionell"}
+              value={t.traditional}
+              checked={form.kitchenStyle === t.traditional}
               onChange={onRadioChange}
             />
-            Menü Peruanischer Traditionell
+            {t.traditional}
           </label>
           <label>
             <input
               type="radio"
               name="kitchenStyle"
-              value="Menü Peruanischer Modern"
-              checked={form.kitchenStyle === "Menü Peruanischer Modern"}
+              value={t.modern}
+              checked={form.kitchenStyle === t.modern}
               onChange={onRadioChange}
             />
-            Menü Peruanischer Modern
+            {t.modern}
           </label>
           <label className={styles.inlineOther}>
             <input
               type="radio"
               name="kitchenStyle"
-              value="Sonstiges"
-              checked={form.kitchenStyle === "Sonstiges"}
+              value={t.other}
+              checked={form.kitchenStyle === t.other}
               onChange={onRadioChange}
             />
-            Sonstiges
+            {t.other}
             <input
               type="text"
               name="kitchenStyleOther"
@@ -262,38 +384,38 @@ export default function ServicePlanForm() {
         </div>
 
         <div className={styles.row}>
-          <span className={styles.label}>Getränke</span>
+          <span className={styles.label}>{t.drinks}</span>
           <label>
             <input
               type="checkbox"
-              value="Softdrinks"
-              checked={form.drinks.includes("Softdrinks")}
+              value={t.softdrinks}
+              checked={form.drinks.includes(t.softdrinks)}
               onChange={(e) => onCheckboxArrayChange(e, "drinks")}
             />
-            Softdrinks
+            {t.softdrinks}
           </label>
           <label>
             <input
               type="checkbox"
-              value="Open Bar"
-              checked={form.drinks.includes("Open Bar")}
+              value={t.openBar}
+              checked={form.drinks.includes(t.openBar)}
               onChange={(e) => onCheckboxArrayChange(e, "drinks")}
             />
-            Open Bar
+            {t.openBar}
           </label>
           <label>
             <input
               type="checkbox"
-              value="Wein/Bier"
-              checked={form.drinks.includes("Wein/Bier")}
+              value={t.wineBeer}
+              checked={form.drinks.includes(t.wineBeer)}
               onChange={(e) => onCheckboxArrayChange(e, "drinks")}
             />
-            Wein/Bier
+            {t.wineBeer}
           </label>
         </div>
 
         <label className={styles.full}>
-          Allergie oder Einschränkungen
+          {t.allergies}
           <input
             name="allergies"
             type="text"
@@ -304,7 +426,7 @@ export default function ServicePlanForm() {
         </label>
 
         <button className={styles.next} type="submit">
-          Weiter →
+          {t.next}
         </button>
       </form>
     </main>

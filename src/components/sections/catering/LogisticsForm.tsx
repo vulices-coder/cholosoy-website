@@ -18,8 +18,160 @@ function readLocaleCookie(): Locale {
   return "de";
 }
 
+const LOGISTICS_DICT: Record<
+  Locale,
+  {
+    title: string;
+    furniture: string;
+    tables: string;
+    chairs: string;
+    tablecloths: string;
+    other: string;
+    staff: string;
+    waiters: string;
+    bartender: string;
+    chefs: string;
+    cleaning: string;
+    kitchen: string;
+    yes: string;
+    no: string;
+    delivery: string;
+    parking: string;
+    stairs: string;
+    lift: string;
+    agb: string;
+    send: string;
+    sending: string;
+    missingData: string;
+    genericError: string;
+    privateAddress: string;
+    eventType: string;
+    time: string;
+    serviceType: string;
+    kitchenStyle: string;
+    drinks: string;
+    allergies: string;
+    furnitureNeeded: string;
+    staffNeeded: string;
+    kitchenAvailable: string;
+    deliveryAccess: string;
+  }
+> = {
+  de: {
+    title: "Logistische Anforderungen",
+    furniture: "Möbel benötigt",
+    tables: "Tische",
+    chairs: "Stühle",
+    tablecloths: "Tischdecken",
+    other: "Sonstiges",
+    staff: "Zusätzliches Personal",
+    waiters: "Kellner",
+    bartender: "Bartender",
+    chefs: "Köche vor Ort",
+    cleaning: "Reinigungskraft",
+    kitchen: "Vorhandene Küche",
+    yes: "Ja",
+    no: "Nein",
+    delivery: "Zugang für Lieferung",
+    parking: "Parkmöglichkeiten",
+    stairs: "Treppen",
+    lift: "Lift",
+    agb: "AGB's akzeptieren",
+    send: "Senden",
+    sending: "Wird gesendet...",
+    missingData: "Es fehlen Formulardaten. Bitte beginnen Sie erneut.",
+    genericError: "Die Catering-Anfrage konnte nicht gespeichert werden.",
+    privateAddress: "Adresse privat",
+    eventType: "Eventtyp",
+    time: "Uhrzeit",
+    serviceType: "Service Art",
+    kitchenStyle: "Küchenstil",
+    drinks: "Getränke",
+    allergies: "Allergien",
+    furnitureNeeded: "Möbel benötigt",
+    staffNeeded: "Zusätzliches Personal",
+    kitchenAvailable: "Vorhandene Küche",
+    deliveryAccess: "Zugang für Lieferung",
+  },
+  es: {
+    title: "Requisitos logísticos",
+    furniture: "Mobiliario necesario",
+    tables: "Mesas",
+    chairs: "Sillas",
+    tablecloths: "Manteles",
+    other: "Otro",
+    staff: "Personal adicional",
+    waiters: "Camareros",
+    bartender: "Bartender",
+    chefs: "Cocineros en el lugar",
+    cleaning: "Personal de limpieza",
+    kitchen: "Cocina disponible",
+    yes: "Sí",
+    no: "No",
+    delivery: "Acceso para entrega",
+    parking: "Aparcamiento",
+    stairs: "Escaleras",
+    lift: "Ascensor",
+    agb: "Aceptar términos y condiciones",
+    send: "Enviar",
+    sending: "Enviando...",
+    missingData: "Faltan datos del formulario. Por favor, comience de nuevo.",
+    genericError: "No se pudo guardar la solicitud de catering.",
+    privateAddress: "Dirección privada",
+    eventType: "Tipo de evento",
+    time: "Hora",
+    serviceType: "Tipo de servicio",
+    kitchenStyle: "Estilo de cocina",
+    drinks: "Bebidas",
+    allergies: "Alergias",
+    furnitureNeeded: "Mobiliario necesario",
+    staffNeeded: "Personal adicional",
+    kitchenAvailable: "Cocina disponible",
+    deliveryAccess: "Acceso para entrega",
+  },
+  en: {
+    title: "Logistical requirements",
+    furniture: "Furniture needed",
+    tables: "Tables",
+    chairs: "Chairs",
+    tablecloths: "Tablecloths",
+    other: "Other",
+    staff: "Additional staff",
+    waiters: "Waiters",
+    bartender: "Bartender",
+    chefs: "On-site chefs",
+    cleaning: "Cleaning staff",
+    kitchen: "Available kitchen",
+    yes: "Yes",
+    no: "No",
+    delivery: "Delivery access",
+    parking: "Parking",
+    stairs: "Stairs",
+    lift: "Lift",
+    agb: "Accept terms and conditions",
+    send: "Send",
+    sending: "Sending...",
+    missingData: "Form data is missing. Please start again.",
+    genericError: "The catering request could not be saved.",
+    privateAddress: "Private address",
+    eventType: "Event type",
+    time: "Time",
+    serviceType: "Service type",
+    kitchenStyle: "Cuisine style",
+    drinks: "Drinks",
+    allergies: "Allergies",
+    furnitureNeeded: "Furniture needed",
+    staffNeeded: "Additional staff",
+    kitchenAvailable: "Available kitchen",
+    deliveryAccess: "Delivery access",
+  },
+};
+
 export default function LogisticsForm() {
   const router = useRouter();
+  const locale = readLocaleCookie();
+  const t = LOGISTICS_DICT[locale];
+
   const [agb, setAgb] = useState(false);
   const [loading, setLoading] = useState(false);
   const canSend = useMemo(() => agb && !loading, [agb, loading]);
@@ -32,7 +184,7 @@ export default function LogisticsForm() {
     const eventRaw = sessionStorage.getItem(EVENT_KEY);
 
     if (!personalRaw || !eventRaw) {
-      alert("Es fehlen Formulardaten. Bitte beginnen Sie erneut.");
+      alert(t.missingData);
       router.push("/catering");
       return;
     }
@@ -57,17 +209,17 @@ export default function LogisticsForm() {
     ).map((el) => el.value);
 
     const message = [
-      `Adresse privat: ${personal.address || "-"}`,
-      `Eventtyp: ${eventData.eventType}${eventData.eventType === "Sonstiges" ? ` (${eventData.eventTypeOther || "-"})` : ""}`,
-      `Uhrzeit: ${eventData.eventTime || "-"}`,
-      `Service Art: ${eventData.serviceType?.join(", ") || "-"}`,
-      `Küchenstil: ${eventData.kitchenStyle}${eventData.kitchenStyle === "Sonstiges" ? ` (${eventData.kitchenStyleOther || "-"})` : ""}`,
-      `Getränke: ${eventData.drinks?.join(", ") || "-"}`,
-      `Allergien: ${eventData.allergies || "-"}`,
-      `Möbel benötigt: ${furniture.join(", ") || "-"}`,
-      `Zusätzliches Personal: ${staff.join(", ") || "-"}`,
-      `Vorhandene Küche: ${kitchen.join(", ") || "-"}`,
-      `Zugang für Lieferung: ${delivery.join(", ") || "-"}`,
+      `${t.privateAddress}: ${personal.address || "-"}`,
+      `${t.eventType}: ${eventData.eventType}${eventData.eventType === t.other ? ` (${eventData.eventTypeOther || "-"})` : ""}`,
+      `${t.time}: ${eventData.eventTime || "-"}`,
+      `${t.serviceType}: ${eventData.serviceType?.join(", ") || "-"}`,
+      `${t.kitchenStyle}: ${eventData.kitchenStyle}${eventData.kitchenStyle === t.other ? ` (${eventData.kitchenStyleOther || "-"})` : ""}`,
+      `${t.drinks}: ${eventData.drinks?.join(", ") || "-"}`,
+      `${t.allergies}: ${eventData.allergies || "-"}`,
+      `${t.furnitureNeeded}: ${furniture.join(", ") || "-"}`,
+      `${t.staffNeeded}: ${staff.join(", ") || "-"}`,
+      `${t.kitchenAvailable}: ${kitchen.join(", ") || "-"}`,
+      `${t.deliveryAccess}: ${delivery.join(", ") || "-"}`,
     ].join("\n");
 
     try {
@@ -82,7 +234,7 @@ export default function LogisticsForm() {
         people: Number(eventData.people),
         budget: null,
         message,
-        locale: readLocaleCookie(),
+        locale,
       });
 
       sessionStorage.removeItem(PERSONAL_KEY);
@@ -91,7 +243,7 @@ export default function LogisticsForm() {
       router.push("/catering/danke");
     } catch (error) {
       console.error(error);
-      alert("Die Catering-Anfrage konnte nicht gespeichert werden.");
+      alert(t.genericError);
     } finally {
       setLoading(false);
     }
@@ -100,46 +252,46 @@ export default function LogisticsForm() {
   return (
     <main className={styles.page}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <h1 className={styles.title}>Logistische Anforderungen</h1>
+        <h1 className={styles.title}>{t.title}</h1>
 
         <section className={styles.block}>
-          <h2>Möbel benötigt</h2>
-          <label><input type="checkbox" name="furniture" value="Tische" /> Tische</label>
-          <label><input type="checkbox" name="furniture" value="Stühle" /> Stühle</label>
-          <label><input type="checkbox" name="furniture" value="Tischdecken" /> Tischdecken</label>
-          <label><input type="checkbox" name="furniture" value="Sonstiges" /> Sonstiges</label>
+          <h2>{t.furniture}</h2>
+          <label><input type="checkbox" name="furniture" value={t.tables} /> {t.tables}</label>
+          <label><input type="checkbox" name="furniture" value={t.chairs} /> {t.chairs}</label>
+          <label><input type="checkbox" name="furniture" value={t.tablecloths} /> {t.tablecloths}</label>
+          <label><input type="checkbox" name="furniture" value={t.other} /> {t.other}</label>
         </section>
 
         <section className={styles.block}>
-          <h2>Zusätzliches Personal</h2>
-          <label><input type="checkbox" name="staff" value="Kellner" /> Kellner</label>
-          <label><input type="checkbox" name="staff" value="Bartender" /> Bartender</label>
-          <label><input type="checkbox" name="staff" value="Köche vor Ort" /> Köche vor Ort</label>
-          <label><input type="checkbox" name="staff" value="Reinigungskraft" /> Reinigungskraft</label>
+          <h2>{t.staff}</h2>
+          <label><input type="checkbox" name="staff" value={t.waiters} /> {t.waiters}</label>
+          <label><input type="checkbox" name="staff" value={t.bartender} /> {t.bartender}</label>
+          <label><input type="checkbox" name="staff" value={t.chefs} /> {t.chefs}</label>
+          <label><input type="checkbox" name="staff" value={t.cleaning} /> {t.cleaning}</label>
         </section>
 
         <section className={styles.block}>
-          <h2>Vorhandene Küche</h2>
-          <label><input type="checkbox" name="kitchen" value="Ja" /> Ja</label>
-          <label><input type="checkbox" name="kitchen" value="Nein" /> Nein</label>
-          <label><input type="checkbox" name="kitchen" value="Sonstiges" /> Sonstiges</label>
+          <h2>{t.kitchen}</h2>
+          <label><input type="checkbox" name="kitchen" value={t.yes} /> {t.yes}</label>
+          <label><input type="checkbox" name="kitchen" value={t.no} /> {t.no}</label>
+          <label><input type="checkbox" name="kitchen" value={t.other} /> {t.other}</label>
         </section>
 
         <section className={styles.block}>
-          <h2>Zugang für Lieferung</h2>
-          <label><input type="checkbox" name="delivery" value="Parkmöglichkeiten" /> Parkmöglichkeiten</label>
-          <label><input type="checkbox" name="delivery" value="Treppen" /> Treppen</label>
-          <label><input type="checkbox" name="delivery" value="Lift" /> Lift</label>
-          <label><input type="checkbox" name="delivery" value="Sonstiges" /> Sonstiges</label>
+          <h2>{t.delivery}</h2>
+          <label><input type="checkbox" name="delivery" value={t.parking} /> {t.parking}</label>
+          <label><input type="checkbox" name="delivery" value={t.stairs} /> {t.stairs}</label>
+          <label><input type="checkbox" name="delivery" value={t.lift} /> {t.lift}</label>
+          <label><input type="checkbox" name="delivery" value={t.other} /> {t.other}</label>
         </section>
 
         <label className={styles.agb}>
           <input type="checkbox" checked={agb} onChange={(e) => setAgb(e.target.checked)} />
-          AGB&apos;s akzeptieren
+          {t.agb}
         </label>
 
         <button className={styles.send} type="submit" disabled={!canSend}>
-          {loading ? "Wird gesendet..." : "Senden"}
+          {loading ? t.sending : t.send}
         </button>
       </form>
     </main>

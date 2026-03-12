@@ -25,6 +25,47 @@ function readLocaleCookie(): Locale {
   return "de";
 }
 
+const PERSONAL_DICT: Record<
+  Locale,
+  {
+    home: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    submit: string;
+    back: string;
+  }
+> = {
+  de: {
+    home: "Zur Home",
+    name: "Vor und Nachname",
+    email: "E-Mail Adresse",
+    phone: "Handynummer",
+    address: "Anschrift",
+    submit: "Senden",
+    back: "Zurück",
+  },
+  es: {
+    home: "Ir al inicio",
+    name: "Nombre y apellido",
+    email: "Correo electrónico",
+    phone: "Número de teléfono",
+    address: "Dirección",
+    submit: "Enviar",
+    back: "Volver",
+  },
+  en: {
+    home: "Go to home",
+    name: "Full name",
+    email: "Email address",
+    phone: "Phone number",
+    address: "Address",
+    submit: "Send",
+    back: "Back",
+  },
+};
+
 export default function PersonalForm() {
   const router = useRouter();
   const [locale, setLocale] = useState<Locale>("de");
@@ -46,6 +87,8 @@ export default function PersonalForm() {
     }
   }, []);
 
+  const t = PERSONAL_DICT[locale];
+
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -60,7 +103,7 @@ export default function PersonalForm() {
   return (
     <main className={styles.page}>
       <section className={styles.card}>
-        <Link href={`/${locale}/home`} className={styles.logo} aria-label="Zur Home">
+        <Link href={`/${locale}/home`} className={styles.logo} aria-label={t.home}>
           <Image
             src="/images/brand/logo.svg"
             alt="CholoSoy"
@@ -72,22 +115,22 @@ export default function PersonalForm() {
 
         <form className={styles.form} onSubmit={onSubmit}>
           <label>
-            Vor und Nachname
+            {t.name}
             <input name="name" type="text" required value={form.name} onChange={onChange} />
           </label>
 
           <label>
-            E-Mail Adresse
+            {t.email}
             <input name="email" type="email" required value={form.email} onChange={onChange} />
           </label>
 
           <label>
-            Handynummer
+            {t.phone}
             <input name="phone" type="tel" required value={form.phone} onChange={onChange} />
           </label>
 
           <label>
-            Anschrift
+            {t.address}
             <input
               name="address"
               type="text"
@@ -98,13 +141,13 @@ export default function PersonalForm() {
           </label>
 
           <button type="submit" className={styles.send}>
-            Senden
+            {t.submit}
           </button>
         </form>
       </section>
 
       <Link href="/" className={styles.back}>
-        Zurück
+        {t.back}
       </Link>
     </main>
   );

@@ -6,23 +6,20 @@ export type CreateCateringRequestInput = {
   name: string;
   email: string;
   phone?: string | null;
-
   eventDate: string;
   location?: string | null;
-
   people: number;
   budget?: number | null;
-
   message?: string | null;
   locale?: "de" | "es" | "en";
 };
 
 export async function createCateringRequest(input: CreateCateringRequestInput) {
-  if (!input.name?.trim()) throw new Error("Name is required");
-  if (!input.email?.trim()) throw new Error("Email is required");
-  if (!input.eventDate?.trim()) throw new Error("Event date is required");
+  if (!input.name?.trim()) throw new Error("NAME_REQUIRED");
+  if (!input.email?.trim()) throw new Error("EMAIL_REQUIRED");
+  if (!input.eventDate?.trim()) throw new Error("EVENT_DATE_REQUIRED");
   if (!Number.isFinite(input.people) || input.people < 1) {
-    throw new Error("People must be >= 1");
+    throw new Error("PEOPLE_INVALID");
   }
 
   const request = await prisma.cateringRequest.create({
