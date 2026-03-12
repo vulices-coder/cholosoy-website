@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import styles from "./Start.module.scss";
+import CookieBanner from "@/components/consent/CookieBanner";
 
 import de from "@/messages/de.json";
 import es from "@/messages/es.json";
@@ -41,6 +42,8 @@ export default async function StartPage() {
 
   return (
     <main className={styles.page}>
+      <CookieBanner />
+
       <section className={styles.startBlock}>
         <div className={styles.startShell}>
           <div className={styles.heroFrame}>
