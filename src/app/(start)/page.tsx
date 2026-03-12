@@ -3,9 +3,6 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import styles from "./Start.module.scss";
 
-import CookieConsentEngine from "@/components/consent/CookieConsentEngine";
-import CookieCard from "@/components/consent/CookieCard";
-
 import de from "@/messages/de.json";
 import es from "@/messages/es.json";
 import en from "@/messages/en.json";
@@ -16,13 +13,6 @@ type StartDict = {
   home: string;
   kontakt: string;
   welcomeTitle: string;
-  cookies: {
-    title: string;
-    text: string;
-    rejectAll: string;
-    settings: string;
-    acceptAll: string;
-  };
 };
 
 const MESSAGES = { de, es, en } as const;
@@ -42,30 +32,17 @@ function getStartDict(locale: Locale): StartDict {
     home: start?.home ?? "Home",
     kontakt: start?.kontakt ?? "Kontakt",
     welcomeTitle: start?.welcomeTitle ?? "Willkommen im magischen Peru!",
-    cookies: {
-      title: start?.cookies?.title ?? "Verwendung von Cookies, Personalisierung und Weitergabe",
-      text: start?.cookies?.text ?? "",
-      rejectAll: start?.cookies?.rejectAll ?? "ALLE ABLEHNEN",
-      settings: start?.cookies?.settings ?? "EINSTELLUNGEN",
-      acceptAll: start?.cookies?.acceptAll ?? "ZUSTIMMEN",
-    },
   };
-}
-
-async function hasAcceptedConsent(): Promise<boolean> {
-  const store = await cookies();
-  return store.get("cholosoy_consent")?.value === "accepted";
 }
 
 export default async function StartPage() {
   const locale = await getLocaleFromCookie();
   const t = getStartDict(locale);
-  const accepted = await hasAcceptedConsent();
+
+  const accepted = true;
 
   return (
     <main className={styles.page}>
-      <CookieConsentEngine locale={locale} />
-
       <section className={styles.startBlock}>
         <div className={styles.startShell}>
           <div className={styles.heroFrame}>
@@ -142,18 +119,7 @@ export default async function StartPage() {
               sizes="100vw"
               className={styles.sectionImg}
             />
-
-            <div className={styles.sectionOverlay}>
-              <div className={styles.cookieSlot}>
-                <CookieCard
-                  title={t.cookies.title}
-                  text={t.cookies.text}
-                  rejectAll={t.cookies.rejectAll}
-                  settings={t.cookies.settings}
-                  acceptAll={t.cookies.acceptAll}
-                />
-              </div>
-            </div>
+            <div className={styles.sectionOverlay} />
           </div>
         </div>
       </section>
