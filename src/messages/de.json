@@ -1,12 +1,34 @@
 {
   "start": {
+    "home": "Home",
+    "kontakt": "Kontakt",
     "welcomeTitle": "Willkommen im magischen Peru!",
     "cookies": {
       "title": "Cookie-Einstellungen",
-      "text": "Wir verwenden Cookies und ähnliche Technologien, um unseren Webservice zu ermöglichen. Mit Ihrer Einwilligung setzen wir zusätzlich Analyse- und Marketing-Cookies von Partnern (Google, Meta, Microsoft) ein, um Inhalte und Werbung zu personalisieren.\n\nDaten können in Länder außerhalb der EU (z. B. USA) übertragen werden. Weitere Informationen und individuelle Einstellungen finden Sie in den [Datenschutzhinweisen].\n\nSie können Ihre Einwilligung jederzeit widerrufen.",
+      "text": "Wir verwenden Cookies und ähnliche Technologien, um unseren Webservice zu ermöglichen. Mit Ihrer Einwilligung setzen wir zusätzlich Analyse- und Marketing-Cookies von Partnern ein. Weitere Informationen finden Sie in den Datenschutzhinweisen.",
       "settings": "EINSTELLUNGEN",
       "rejectAll": "ALLE ABLEHNEN",
       "acceptAll": "ZUSTIMMEN"
     }
+  },
+  "nav": {
+    "karte": "Karte",
+    "about": "Über Uns",
+    "gallery": "Galerie",
+    "events": "Veranstaltung",
+    "catering": "Catering",
+    "kontakt": "Kontakt / Reservierung",
+    "logo": "CholoSoy Logo"
+  },
+  "footer": {
+    "brand": "CholoSoy 2026",
+    "agb": "AGB",
+    "datenschutz": "Datenschutz",
+    "info": "Info",
+    "impressum": "Impressum",
+    "facebook": "Facebook",
+    "instagram": "Instagram"
   }
+
+
 }

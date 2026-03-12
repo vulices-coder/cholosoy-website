@@ -1,14 +1,32 @@
-{
+{  
   "start": {
     "home": "Inicio",
     "kontakt": "Contacto",
     "welcomeTitle": "¡Bienvenido al mágico Perú!",
     "cookies": {
       "title": "Configuración de cookies",
-      "text": "Utilizamos cookies propias y de terceros (Google, Meta, Microsoft) para el funcionamiento de la web y, con su consentimiento, para análisis, marketing y personalización de contenidos.\n\nLos datos pueden transferirse a países fuera de la UE (p. ej., EE. UU.). Más información y configuración en los [Avisos de privacidad].\n\nPuede retirar su consentimiento en cualquier momento.",
+      "text": "Utilizamos cookies y tecnologías similares para habilitar nuestro sitio web. Con su consentimiento, también utilizamos cookies de análisis y marketing de socios. Más información en los avisos de privacidad.",
       "settings": "CONFIGURACIÓN",
       "rejectAll": "RECHAZAR TODO",
       "acceptAll": "ACEPTAR"
     }
+  },
+  "nav": {
+    "karte": "Carta",
+    "about": "Sobre Nosotros",
+    "gallery": "Galería",
+    "events": "Eventos",
+    "catering": "Catering",
+    "kontakt": "Contacto / Reserva",
+    "logo": "Logo de CholoSoy"
+  },
+  "footer": {
+    "brand": "CholoSoy 2026",
+    "agb": "Términos",
+    "datenschutz": "Privacidad",
+    "info": "Info",
+    "impressum": "Aviso legal",
+    "facebook": "Facebook",
+    "instagram": "Instagram"
   }
 }

@@ -5,10 +5,29 @@
     "welcomeTitle": "Welcome to magical Peru!",
     "cookies": {
       "title": "Cookie settings",
-      "text": "We use cookies and similar technologies to enable our website. With your consent, we also use analytics and marketing cookies from partners (Google, Meta, Microsoft) to personalize content and ads.\n\nData may be transferred to countries outside the EU (e.g., USA). More info and settings are available in our [Privacy Policy].\n\nYou can withdraw consent at any time.",
+      "text": "We use cookies and similar technologies to enable our website. With your consent, we also use analytics and marketing cookies from partners. More information is available in our privacy policy.",
       "settings": "SETTINGS",
       "rejectAll": "REJECT ALL",
       "acceptAll": "ACCEPT"
     }
+  },
+  "nav": {
+    "karte": "Menu",
+    "about": "About Us",
+    "gallery": "Gallery",
+    "events": "Events",
+    "catering": "Catering",
+    "kontakt": "Contact / Reservation",
+    "logo": "CholoSoy Logo"
+  },
+  "footer": {
+    "brand": "CholoSoy 2026",
+    "agb": "Terms",
+    "datenschutz": "Privacy",
+    "info": "Info",
+    "impressum": "Legal Notice",
+    "facebook": "Facebook",
+    "instagram": "Instagram"
   }
+
 }

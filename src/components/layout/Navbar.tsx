@@ -8,18 +8,62 @@ import styles from "./Navbar.module.scss";
 
 const LOCALES = new Set(["de", "es", "en"]);
 
-function getLocaleFromPath(pathname: string) {
+type Locale = "de" | "es" | "en";
+
+function getLocaleFromPath(pathname: string): Locale {
   const first = pathname.split("/")[1];
-  return LOCALES.has(first) ? first : null;
+  return LOCALES.has(first) ? (first as Locale) : "de";
 }
+
+const NAV_DICT: Record<
+  Locale,
+  {
+    karte: string;
+    about: string;
+    gallery: string;
+    events: string;
+    catering: string;
+    kontakt: string;
+    logo: string;
+  }
+> = {
+  de: {
+    karte: "Karte",
+    about: "Über Uns",
+    gallery: "Galerie",
+    events: "Veranstaltung",
+    catering: "Catering",
+    kontakt: "Kontakt / Reservierung",
+    logo: "CholoSoy Logo",
+  },
+  es: {
+    karte: "Carta",
+    about: "Sobre Nosotros",
+    gallery: "Galería",
+    events: "Eventos",
+    catering: "Catering",
+    kontakt: "Contacto / Reserva",
+    logo: "Logo de CholoSoy",
+  },
+  en: {
+    karte: "Menu",
+    about: "About Us",
+    gallery: "Gallery",
+    events: "Events",
+    catering: "Catering",
+    kontakt: "Contact / Reservation",
+    logo: "CholoSoy Logo",
+  },
+};
 
 export default function Navbar() {
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
+  const t = NAV_DICT[locale];
 
-  const withLocale = (path: string) => (locale ? `/${locale}${path}` : path);
+  const withLocale = (path: string) => `/${locale}${path}`;
 
-  const homeHref = locale ? `/${locale}/home` : "/";
+  const homeHref = withLocale("/home");
   const aboutHref = withLocale("/about");
   const galleryHref = withLocale("/gallery");
   const eventsHref = withLocale("/veranstaltung");
@@ -28,7 +72,7 @@ export default function Navbar() {
   const karteHref = "/karte/vorspeisen";
   const cateringHref = "/catering";
 
-  const isHome = locale ? pathname === `/${locale}/home` : false;
+  const isHome = pathname === homeHref;
   const logoHref = isHome ? "/" : homeHref;
 
   const isActive = (href: string) => pathname === href;
@@ -37,10 +81,10 @@ export default function Navbar() {
     <header className={styles.nav}>
       <Container size="lg">
         <div className={styles.navInner}>
-          <Link className={styles.logo} href={logoHref} aria-label="CholoSoy Logo">
+          <Link className={styles.logo} href={logoHref} aria-label={t.logo}>
             <Image
               src="/images/brand/logo.svg"
-              alt="CholoSoy Logo"
+              alt={t.logo}
               width={94}
               height={94}
               priority
@@ -53,33 +97,33 @@ export default function Navbar() {
               href={karteHref}
               aria-current={pathname.startsWith("/karte") ? "page" : undefined}
             >
-              Karte
+              {t.karte}
             </Link>
 
             <Link href={aboutHref} aria-current={isActive(aboutHref) ? "page" : undefined}>
-              Über Uns
+              {t.about}
             </Link>
 
             <Link href={galleryHref} aria-current={isActive(galleryHref) ? "page" : undefined}>
-              Galerie
+              {t.gallery}
             </Link>
 
             <Link href={eventsHref} aria-current={isActive(eventsHref) ? "page" : undefined}>
-              Veranstaltung
+              {t.events}
             </Link>
 
             <Link
               href={cateringHref}
               aria-current={pathname.startsWith("/catering") ? "page" : undefined}
             >
-              Catering
+              {t.catering}
             </Link>
           </nav>
 
           <Link
             className={styles.avatar}
             href={kontaktHref}
-            aria-label="Kontakt / Reservierung"
+            aria-label={t.kontakt}
             aria-current={isActive(kontaktHref) ? "page" : undefined}
           />
         </div>

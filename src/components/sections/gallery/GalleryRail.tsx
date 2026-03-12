@@ -1,19 +1,58 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import Container from "@/components/ui/Container";
 import styles from "./GalleryRail.module.scss";
 
-const images = Array.from({ length: 34 }, (_, i) => {
-  const num = String(i + 1).padStart(2, "0");
-  return {
-    src: `/images/gallery/${num}.png`,
-    alt: `CholoSoy Galerie ${num}`,
-  };
-});
+const LOCALES = new Set(["de", "es", "en"]);
+
+type Locale = "de" | "es" | "en";
+
+function getLocaleFromPath(pathname: string): Locale {
+  const first = pathname.split("/")[1];
+  return LOCALES.has(first) ? (first as Locale) : "de";
+}
+
+const GALLERY_DICT: Record<
+  Locale,
+  {
+    title: string;
+    altPrefix: string;
+    ariaLabel: string;
+  }
+> = {
+  de: {
+    title: "Galerie",
+    altPrefix: "CholoSoy Galerie",
+    ariaLabel: "Galerie Bilder",
+  },
+  es: {
+    title: "Galería",
+    altPrefix: "Galería CholoSoy",
+    ariaLabel: "Imágenes de la galería",
+  },
+  en: {
+    title: "Gallery",
+    altPrefix: "CholoSoy Gallery",
+    ariaLabel: "Gallery images",
+  },
+};
 
 export default function GalleryRail() {
+  const pathname = usePathname();
+  const locale = getLocaleFromPath(pathname);
+  const t = GALLERY_DICT[locale];
+
+  const images = Array.from({ length: 34 }, (_, i) => {
+    const num = String(i + 1).padStart(2, "0");
+    return {
+      src: `/images/gallery/${num}.png`,
+      alt: `${t.altPrefix} ${num}`,
+    };
+  });
+
   const railRef = useRef<HTMLDivElement | null>(null);
   const isDownRef = useRef(false);
   const startXRef = useRef(0);
@@ -66,13 +105,13 @@ export default function GalleryRail() {
       <Container size="lg">
         <div className={styles.stage}>
           <header className={styles.header}>
-            <h1 className={styles.title}>Galerie</h1>
+            <h1 className={styles.title}>{t.title}</h1>
           </header>
 
           <div
             ref={railRef}
             className={`${styles.rail} ${isDragging ? styles.dragging : ""}`}
-            aria-label="Galerie Bilder"
+            aria-label={t.ariaLabel}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={endDrag}
