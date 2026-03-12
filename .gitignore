@@ -12,11 +12,10 @@ out
 next
 cholosoy-website@0.1.0
 
+# prisma generated client
 /generated/prisma
 
-# Environment variables
+# environment variables
 .env
 .env.*
 
-# Prisma local config
-prisma.config.ts*
