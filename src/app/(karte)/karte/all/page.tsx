@@ -3,6 +3,9 @@ import { KARTE_SECTIONS } from "@/components/sections/karte/menu.data";
 import { getMenuItems } from "@/lib/queries/menu";
 import styles from "./Page.module.scss";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function KarteAllPage() {
   const allItems = await getMenuItems();
 
