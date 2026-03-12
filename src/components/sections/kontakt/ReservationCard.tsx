@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./ReservationCard.module.scss";
 
+type Locale = "de" | "es" | "en";
+
 type Reservation = {
   guests: number;
   date: string;
@@ -16,6 +18,51 @@ const STORAGE_KEY = "cholosoy_reservation_selection";
 const OPEN_TIME = "12:00";
 const CLOSE_TIME = "22:00";
 
+const RESERVATION_CARD_DICT: Record<
+  Locale,
+  {
+    title: string;
+    change: string;
+    save: string;
+    confirmed: string;
+    kitchenClose: string;
+    until: string;
+    warningMax: string;
+    warningMin: string;
+  }
+> = {
+  de: {
+    title: "Ihre Reservierung",
+    change: "ändern",
+    save: "Speichern",
+    confirmed: "Bestätigt",
+    kitchenClose: "Küchenschluss um 22:00 Uhr",
+    until: "bis",
+    warningMax: `Reservierungen sind nur bis ${CLOSE_TIME} Uhr möglich. Die Uhrzeit wurde angepasst.`,
+    warningMin: `Reservierungen beginnen ab ${OPEN_TIME} Uhr. Die Uhrzeit wurde angepasst.`,
+  },
+  es: {
+    title: "Su reserva",
+    change: "cambiar",
+    save: "Guardar",
+    confirmed: "Confirmado",
+    kitchenClose: "La cocina cierra a las 22:00 h",
+    until: "hasta",
+    warningMax: `Las reservas solo son posibles hasta las ${CLOSE_TIME}. La hora ha sido ajustada.`,
+    warningMin: `Las reservas comienzan a partir de las ${OPEN_TIME}. La hora ha sido ajustada.`,
+  },
+  en: {
+    title: "Your reservation",
+    change: "change",
+    save: "Save",
+    confirmed: "Confirmed",
+    kitchenClose: "Kitchen closes at 10:00 PM",
+    until: "until",
+    warningMax: `Reservations are only possible until ${CLOSE_TIME}. The time has been adjusted.`,
+    warningMin: `Reservations start from ${OPEN_TIME}. The time has been adjusted.`,
+  },
+};
+
 function getTomorrowDateString() {
   const now = new Date();
   const tomorrow = new Date(now);
@@ -28,11 +75,19 @@ function getTomorrowDateString() {
   return `${year}-${month}-${day}`;
 }
 
-function toDateLabel(date: string) {
+function toDateLabel(date: string, locale: Locale) {
   if (!date) return "";
+
   try {
     const d = new Date(`${date}T00:00:00`);
-    return d.toLocaleDateString("de-DE", {
+
+    const map: Record<Locale, string> = {
+      de: "de-DE",
+      es: "es-ES",
+      en: "en-GB",
+    };
+
+    return d.toLocaleDateString(map[locale], {
       weekday: "long",
       day: "2-digit",
       month: "long",
@@ -42,9 +97,9 @@ function toDateLabel(date: string) {
   }
 }
 
-function toTimeLabel(time: string) {
+function toTimeLabel(time: string, locale: Locale) {
   if (!time) return "";
-  return `${time} bis ${CLOSE_TIME}`;
+  return `${time} ${RESERVATION_CARD_DICT[locale].until} ${CLOSE_TIME}`;
 }
 
 function clampTimeToKitchenHours(time: string) {
@@ -54,7 +109,14 @@ function clampTimeToKitchenHours(time: string) {
   return time;
 }
 
-export default function ReservationCard({ reservation }: { reservation: Reservation }) {
+export default function ReservationCard({
+  reservation,
+  locale,
+}: {
+  reservation: Reservation;
+  locale: Locale;
+}) {
+  const t = RESERVATION_CARD_DICT[locale];
   const tomorrow = useMemo(() => getTomorrowDateString(), []);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -101,9 +163,9 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
     const normalizedTime = clampTimeToKitchenHours(time || OPEN_TIME);
 
     if (time > CLOSE_TIME) {
-      setWarning(`Reservierungen sind nur bis ${CLOSE_TIME} Uhr möglich. Die Uhrzeit wurde angepasst.`);
+      setWarning(t.warningMax);
     } else if (time < OPEN_TIME) {
-      setWarning(`Reservierungen beginnen ab ${OPEN_TIME} Uhr. Die Uhrzeit wurde angepasst.`);
+      setWarning(t.warningMin);
     } else {
       setWarning("");
     }
@@ -128,8 +190,8 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
     <aside className={styles.card}>
       <div className={styles.topRow}>
         <div>
-          <h3 className={styles.title}>Ihre Reservierung</h3>
-          <p className={styles.sub}>{reservation.kitchenClose}</p>
+          <h3 className={styles.title}>{t.title}</h3>
+          <p className={styles.sub}>{t.kitchenClose}</p>
         </div>
 
         <button
@@ -137,7 +199,7 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
           className={styles.change}
           onClick={() => setIsEditing((v) => !v)}
         >
-          ändern
+          {t.change}
         </button>
       </div>
 
@@ -169,7 +231,7 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
               onChange={(e) => setDate(e.target.value)}
             />
           ) : (
-            <strong className={styles.value}>{toDateLabel(date) || reservation.dateLabel}</strong>
+            <strong className={styles.value}>{toDateLabel(date, locale) || reservation.dateLabel}</strong>
           )}
         </div>
 
@@ -187,16 +249,16 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
                 setTime(e.target.value);
 
                 if (e.target.value > CLOSE_TIME) {
-                  setWarning(`Reservierungen sind nur bis ${CLOSE_TIME} Uhr möglich.`);
+                  setWarning(t.warningMax);
                 } else if (e.target.value < OPEN_TIME) {
-                  setWarning(`Reservierungen beginnen ab ${OPEN_TIME} Uhr.`);
+                  setWarning(t.warningMin);
                 } else {
                   setWarning("");
                 }
               }}
             />
           ) : (
-            <strong className={styles.value}>{toTimeLabel(time) || reservation.timeLabel}</strong>
+            <strong className={styles.value}>{toTimeLabel(time, locale) || reservation.timeLabel}</strong>
           )}
         </div>
       </div>
@@ -207,7 +269,7 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
         <button
           type="button"
           className={styles.confirm}
-          aria-label="Bestätigt"
+          aria-label={t.confirmed}
           onClick={() => setConfirmed((v) => !v)}
         >
           <span className={confirmed ? styles.dotOn : styles.dotOff} />
@@ -215,7 +277,7 @@ export default function ReservationCard({ reservation }: { reservation: Reservat
 
         {isEditing && (
           <button type="button" className={styles.save} onClick={save}>
-            Speichern
+            {t.save}
           </button>
         )}
       </div>

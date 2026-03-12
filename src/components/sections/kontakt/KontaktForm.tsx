@@ -9,7 +9,110 @@ type Locale = "de" | "es" | "en";
 
 const STORAGE_KEY = "cholosoy_reservation_selection";
 
+const KONTAKT_FORM_DICT: Record<
+  Locale,
+  {
+    title: string;
+    salutation: string;
+    frau: string;
+    herr: string;
+    divers: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    comment: string;
+    agb: string;
+    privacy: string;
+    contactConsent: string;
+    submit: string;
+    loading: string;
+    successTitle: string;
+    successText: string;
+    missingReservation: string;
+    invalidReservation: string;
+    genericError: string;
+    notePrefix: string;
+    commentPrefix: string;
+  }
+> = {
+  de: {
+    title: "Kontakt",
+    salutation: "Anrede",
+    frau: "Frau",
+    herr: "Herr",
+    divers: "Divers",
+    firstName: "Vorname",
+    lastName: "Nachname",
+    phone: "Telefon",
+    email: "E-Mail",
+    comment: "Kommentare, Allergien oder Präferenzen (optional)",
+    agb: "Ich akzeptiere die Allgemeinen Geschäftsbedingungen",
+    privacy: "Ich bestätige die Datenschutzbestimmungen",
+    contactConsent: "Ich stimme der Kontaktaufnahme zu",
+    submit: "Reservieren",
+    loading: "Wird gespeichert...",
+    successTitle: "Danke für Ihre Reservierung",
+    successText: "Wir haben Ihre Anfrage erhalten und melden uns so schnell wie möglich bei Ihnen.",
+    missingReservation: "Reservierungsdaten fehlen. Bitte wählen Sie zuerst Datum, Uhrzeit und Gäste.",
+    invalidReservation: "Reservierungsdaten sind ungültig.",
+    genericError: "Die Reservierung konnte nicht gespeichert werden.",
+    notePrefix: "Anrede",
+    commentPrefix: "Kommentar",
+  },
+  es: {
+    title: "Contacto",
+    salutation: "Tratamiento",
+    frau: "Sra.",
+    herr: "Sr.",
+    divers: "Diverso",
+    firstName: "Nombre",
+    lastName: "Apellido",
+    phone: "Teléfono",
+    email: "Correo electrónico",
+    comment: "Comentarios, alergias o preferencias (opcional)",
+    agb: "Acepto los términos y condiciones generales",
+    privacy: "Confirmo la política de privacidad",
+    contactConsent: "Acepto ser contactado",
+    submit: "Reservar",
+    loading: "Guardando...",
+    successTitle: "Gracias por su reserva",
+    successText: "Hemos recibido su solicitud y nos pondremos en contacto con usted lo antes posible.",
+    missingReservation: "Faltan los datos de la reserva. Primero elija fecha, hora y número de personas.",
+    invalidReservation: "Los datos de la reserva no son válidos.",
+    genericError: "No se pudo guardar la reserva.",
+    notePrefix: "Tratamiento",
+    commentPrefix: "Comentario",
+  },
+  en: {
+    title: "Contact",
+    salutation: "Salutation",
+    frau: "Ms.",
+    herr: "Mr.",
+    divers: "Diverse",
+    firstName: "First name",
+    lastName: "Last name",
+    phone: "Phone",
+    email: "Email",
+    comment: "Comments, allergies or preferences (optional)",
+    agb: "I accept the general terms and conditions",
+    privacy: "I confirm the privacy policy",
+    contactConsent: "I agree to be contacted",
+    submit: "Reserve",
+    loading: "Saving...",
+    successTitle: "Thank you for your reservation",
+    successText: "We have received your request and will get back to you as soon as possible.",
+    missingReservation: "Reservation data is missing. Please choose date, time and number of guests first.",
+    invalidReservation: "Reservation data is invalid.",
+    genericError: "The reservation could not be saved.",
+    notePrefix: "Salutation",
+    commentPrefix: "Comment",
+  },
+};
+
 export default function KontaktForm({ locale }: { locale: Locale }) {
+  const t = KONTAKT_FORM_DICT[locale];
+
   const [anrede, setAnrede] = useState<Anrede>("frau");
   const [vorname, setVorname] = useState("");
   const [nachname, setNachname] = useState("");
@@ -43,7 +146,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
 
     const saved = sessionStorage.getItem(STORAGE_KEY);
     if (!saved) {
-      alert("Reservierungsdaten fehlen. Bitte wählen Sie zuerst Datum, Uhrzeit und Gäste.");
+      alert(t.missingReservation);
       return;
     }
 
@@ -51,7 +154,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
     try {
       selection = JSON.parse(saved);
     } catch {
-      alert("Reservierungsdaten sind ungültig.");
+      alert(t.invalidReservation);
       return;
     }
 
@@ -66,8 +169,8 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
         date: selection.date,
         time: selection.time,
         notes: [
-          `Anrede: ${anrede}`,
-          comment?.trim() ? `Kommentar: ${comment.trim()}` : null,
+          `${t.notePrefix}: ${anrede}`,
+          comment?.trim() ? `${t.commentPrefix}: ${comment.trim()}` : null,
         ]
           .filter(Boolean)
           .join("\n"),
@@ -87,7 +190,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
       setSubmitted(true);
     } catch (error) {
       console.error(error);
-      alert("Die Reservierung konnte nicht gespeichert werden.");
+      alert(t.genericError);
     } finally {
       setLoading(false);
     }
@@ -96,20 +199,18 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
   if (submitted) {
     return (
       <section className={styles.successBox}>
-        <h2 className={styles.successTitle}>Danke für Ihre Reservierung</h2>
-        <p className={styles.successText}>
-          Wir haben Ihre Anfrage erhalten und melden uns so schnell wie möglich bei Ihnen.
-        </p>
+        <h2 className={styles.successTitle}>{t.successTitle}</h2>
+        <p className={styles.successText}>{t.successText}</p>
       </section>
     );
   }
 
   return (
     <form className={styles.form} onSubmit={onSubmit}>
-      <h2 className={styles.title}>Kontakt</h2>
+      <h2 className={styles.title}>{t.title}</h2>
 
       <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>Anrede</legend>
+        <legend className={styles.legend}>{t.salutation}</legend>
 
         <label className={styles.radio}>
           <input
@@ -118,7 +219,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
             checked={anrede === "frau"}
             onChange={() => setAnrede("frau")}
           />
-          Frau
+          {t.frau}
         </label>
 
         <label className={styles.radio}>
@@ -128,7 +229,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
             checked={anrede === "herr"}
             onChange={() => setAnrede("herr")}
           />
-          Herr
+          {t.herr}
         </label>
 
         <label className={styles.radio}>
@@ -138,13 +239,13 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
             checked={anrede === "divers"}
             onChange={() => setAnrede("divers")}
           />
-          Divers
+          {t.divers}
         </label>
       </fieldset>
 
       <div className={styles.grid2}>
         <div className={styles.control}>
-          <label className={styles.label}>Vorname</label>
+          <label className={styles.label}>{t.firstName}</label>
           <input
             className={styles.input}
             value={vorname}
@@ -153,7 +254,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
         </div>
 
         <div className={styles.control}>
-          <label className={styles.label}>Nachname</label>
+          <label className={styles.label}>{t.lastName}</label>
           <input
             className={styles.input}
             value={nachname}
@@ -162,7 +263,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
         </div>
 
         <div className={styles.control}>
-          <label className={styles.label}>Telefon</label>
+          <label className={styles.label}>{t.phone}</label>
           <input
             className={styles.input}
             type="tel"
@@ -172,7 +273,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
         </div>
 
         <div className={styles.control}>
-          <label className={styles.label}>E-Mail</label>
+          <label className={styles.label}>{t.email}</label>
           <input
             className={styles.input}
             type="email"
@@ -183,9 +284,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
       </div>
 
       <div className={styles.control}>
-        <label className={styles.label}>
-          Kommentare, Allergien oder Präferenzen (optional)
-        </label>
+        <label className={styles.label}>{t.comment}</label>
         <textarea
           className={styles.textarea}
           value={comment}
@@ -201,7 +300,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
               checked={agbOk}
               onChange={(e) => setAgbOk(e.target.checked)}
             />
-            Ich akzeptiere die Allgemeinen Geschäftsbedingungen
+            {t.agb}
           </label>
 
           <label className={styles.check}>
@@ -210,7 +309,7 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
               checked={dsOk}
               onChange={(e) => setDsOk(e.target.checked)}
             />
-            Ich bestätige die Datenschutzbestimmungen
+            {t.privacy}
           </label>
 
           <label className={styles.check}>
@@ -219,12 +318,12 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
               checked={kontaktOk}
               onChange={(e) => setKontaktOk(e.target.checked)}
             />
-            Ich stimme der Kontaktaufnahme zu
+            {t.contactConsent}
           </label>
         </div>
 
         <button className={styles.submit} type="submit" disabled={!canSubmit}>
-          {loading ? "Wird gespeichert..." : "Reservieren"}
+          {loading ? t.loading : t.submit}
         </button>
       </div>
     </form>
