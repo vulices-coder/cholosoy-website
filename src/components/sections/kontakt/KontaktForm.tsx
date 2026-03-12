@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createReservation } from "@/actions/reservations";
 import styles from "./KontaktForm.module.scss";
 
@@ -8,6 +8,15 @@ type Anrede = "frau" | "herr" | "divers";
 type Locale = "de" | "es" | "en";
 
 const STORAGE_KEY = "cholosoy_reservation_selection";
+const CUSTOMER_STORAGE_KEY = "cholosoy_customer_profile";
+
+type SavedCustomerProfile = {
+  anrede: Anrede;
+  vorname: string;
+  nachname: string;
+  telefon: string;
+  email: string;
+};
 
 const KONTAKT_FORM_DICT: Record<
   Locale,
@@ -25,6 +34,7 @@ const KONTAKT_FORM_DICT: Record<
     agb: string;
     privacy: string;
     contactConsent: string;
+    saveData: string;
     submit: string;
     loading: string;
     successTitle: string;
@@ -50,11 +60,13 @@ const KONTAKT_FORM_DICT: Record<
     agb: "Ich akzeptiere die Allgemeinen Geschäftsbedingungen",
     privacy: "Ich bestätige die Datenschutzbestimmungen",
     contactConsent: "Ich stimme der Kontaktaufnahme zu",
+    saveData: "Meine Daten für zukünftige Reservierungen auf diesem Gerät speichern",
     submit: "Reservieren",
     loading: "Wird gespeichert...",
     successTitle: "Danke für Ihre Reservierung",
     successText: "Wir haben Ihre Anfrage erhalten und melden uns so schnell wie möglich bei Ihnen.",
-    missingReservation: "Reservierungsdaten fehlen. Bitte wählen Sie zuerst Datum, Uhrzeit und Gäste.",
+    missingReservation:
+      "Reservierungsdaten fehlen. Bitte wählen Sie zuerst Datum, Uhrzeit und Gäste.",
     invalidReservation: "Reservierungsdaten sind ungültig.",
     genericError: "Die Reservierung konnte nicht gespeichert werden.",
     notePrefix: "Anrede",
@@ -74,11 +86,14 @@ const KONTAKT_FORM_DICT: Record<
     agb: "Acepto los términos y condiciones generales",
     privacy: "Confirmo la política de privacidad",
     contactConsent: "Acepto ser contactado",
+    saveData: "Guardar mis datos para futuras reservas en este dispositivo",
     submit: "Reservar",
     loading: "Guardando...",
     successTitle: "Gracias por su reserva",
-    successText: "Hemos recibido su solicitud y nos pondremos en contacto con usted lo antes posible.",
-    missingReservation: "Faltan los datos de la reserva. Primero elija fecha, hora y número de personas.",
+    successText:
+      "Hemos recibido su solicitud y nos pondremos en contacto con usted lo antes posible.",
+    missingReservation:
+      "Faltan los datos de la reserva. Primero elija fecha, hora y número de personas.",
     invalidReservation: "Los datos de la reserva no son válidos.",
     genericError: "No se pudo guardar la reserva.",
     notePrefix: "Tratamiento",
@@ -98,11 +113,13 @@ const KONTAKT_FORM_DICT: Record<
     agb: "I accept the general terms and conditions",
     privacy: "I confirm the privacy policy",
     contactConsent: "I agree to be contacted",
+    saveData: "Save my details for future reservations on this device",
     submit: "Reserve",
     loading: "Saving...",
     successTitle: "Thank you for your reservation",
     successText: "We have received your request and will get back to you as soon as possible.",
-    missingReservation: "Reservation data is missing. Please choose date, time and number of guests first.",
+    missingReservation:
+      "Reservation data is missing. Please choose date, time and number of guests first.",
     invalidReservation: "Reservation data is invalid.",
     genericError: "The reservation could not be saved.",
     notePrefix: "Salutation",
@@ -123,8 +140,27 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
   const [agbOk, setAgbOk] = useState(false);
   const [dsOk, setDsOk] = useState(false);
   const [kontaktOk, setKontaktOk] = useState(false);
+  const [saveData, setSaveData] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem(CUSTOMER_STORAGE_KEY);
+    if (!savedProfile) return;
+
+    try {
+      const profile = JSON.parse(savedProfile) as Partial<SavedCustomerProfile>;
+
+      setAnrede(profile.anrede === "herr" || profile.anrede === "divers" ? profile.anrede : "frau");
+      setVorname(profile.vorname ?? "");
+      setNachname(profile.nachname ?? "");
+      setTelefon(profile.telefon ?? "");
+      setEmail(profile.email ?? "");
+      setSaveData(true);
+    } catch {
+      localStorage.removeItem(CUSTOMER_STORAGE_KEY);
+    }
+  }, []);
 
   const isEmailValid = (value: string) => /\S+@\S+\.\S+/.test(value);
 
@@ -177,12 +213,22 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
         locale,
       });
 
+      if (saveData) {
+        const profile: SavedCustomerProfile = {
+          anrede,
+          vorname: vorname.trim(),
+          nachname: nachname.trim(),
+          telefon: telefon.trim(),
+          email: email.trim(),
+        };
+
+        localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(profile));
+      } else {
+        localStorage.removeItem(CUSTOMER_STORAGE_KEY);
+      }
+
       sessionStorage.removeItem(STORAGE_KEY);
 
-      setVorname("");
-      setNachname("");
-      setTelefon("");
-      setEmail("");
       setComment("");
       setAgbOk(false);
       setDsOk(false);
@@ -319,6 +365,15 @@ export default function KontaktForm({ locale }: { locale: Locale }) {
               onChange={(e) => setKontaktOk(e.target.checked)}
             />
             {t.contactConsent}
+          </label>
+
+          <label className={styles.check}>
+            <input
+              type="checkbox"
+              checked={saveData}
+              onChange={(e) => setSaveData(e.target.checked)}
+            />
+            {t.saveData}
           </label>
         </div>
 
