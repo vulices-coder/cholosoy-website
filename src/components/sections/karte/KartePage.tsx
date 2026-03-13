@@ -4,10 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import styles from "./KartePage.module.scss";
-import { SECTION_LABEL, type KarteSection } from "./menu.data";
+import { SECTION_LABELS, type KarteSection, type Locale } from "./menu.data";
 import KarteToolbar from "./KarteToolbar";
-
-type Locale = "de" | "es" | "en";
 
 type KarteItem = {
   id: string;
@@ -32,12 +30,37 @@ function formatPrice(price: number) {
 }
 
 function isAlcoholicDrink(item: KarteItem) {
-  return [
-    "pisco-sour",
-    "chilcano-de-pisco",
-    "bier-vom-fass",
-  ].includes(item.slug);
+  return ["pisco-sour", "chilcano-de-pisco", "bier-vom-fass"].includes(item.slug);
 }
+
+const UI_TEXT: Record<
+  Locale,
+  {
+    empty: string;
+    nonAlcoholic: string;
+    alcoholic: string;
+    homeAria: string;
+  }
+> = {
+  de: {
+    empty: "Für diese Kategorie gibt es aktuell noch keine Einträge.",
+    nonAlcoholic: "Ohne Alkohol",
+    alcoholic: "Mit Alkohol",
+    homeAria: "Zur Home",
+  },
+  es: {
+    empty: "Actualmente no hay entradas para esta categoría.",
+    nonAlcoholic: "Sin alcohol",
+    alcoholic: "Con alcohol",
+    homeAria: "Ir a Home",
+  },
+  en: {
+    empty: "There are currently no entries for this category.",
+    nonAlcoholic: "Non-alcoholic",
+    alcoholic: "Alcoholic",
+    homeAria: "Go to Home",
+  },
+};
 
 export default function KartePage({
   section,
@@ -53,6 +76,9 @@ export default function KartePage({
     setLocale(readLocaleCookie());
   }, []);
 
+  const t = UI_TEXT[locale];
+  const title = SECTION_LABELS[locale][section];
+
   const groupedDrinks = useMemo(() => {
     if (section !== "getraenke") return null;
 
@@ -66,7 +92,7 @@ export default function KartePage({
     <div className={styles.sheetWrap}>
       <div className={styles.sheet} style={{ ["--zoom" as any]: zoom }}>
         <div className={styles.header}>
-          <Link href={`/${locale}/home`} aria-label="Zur Home">
+          <Link href={`/${locale}/home`} aria-label={t.homeAria}>
             <Image
               src="/images/brand/logo.svg"
               alt="CholoSoy"
@@ -78,17 +104,15 @@ export default function KartePage({
           </Link>
         </div>
 
-        <h1 className={styles.title}>{SECTION_LABEL[section]}</h1>
+        <h1 className={styles.title}>{title}</h1>
 
         {items.length === 0 ? (
-          <div className={styles.empty}>
-            Für diese Kategorie gibt es aktuell noch keine Einträge.
-          </div>
+          <div className={styles.empty}>{t.empty}</div>
         ) : section === "getraenke" && groupedDrinks ? (
           <div className={styles.groupedMenu}>
             {groupedDrinks.ohneAlkohol.length > 0 && (
               <>
-                <div className={styles.groupLabel}>Ohne Alkohol</div>
+                <div className={styles.groupLabel}>{t.nonAlcoholic}</div>
                 <ul className={styles.list}>
                   {groupedDrinks.ohneAlkohol.map((it) => (
                     <li key={it.id} className={styles.item}>
@@ -107,7 +131,7 @@ export default function KartePage({
 
             {groupedDrinks.mitAlkohol.length > 0 && (
               <>
-                <div className={styles.groupLabel}>Mit Alkohol</div>
+                <div className={styles.groupLabel}>{t.alcoholic}</div>
                 <ul className={styles.list}>
                   {groupedDrinks.mitAlkohol.map((it) => (
                     <li key={it.id} className={styles.item}>
@@ -141,7 +165,7 @@ export default function KartePage({
         )}
 
         <div className={styles.toolbarDock}>
-          <KarteToolbar section={section} zoom={zoom} setZoom={setZoom} />
+          <KarteToolbar section={section} zoom={zoom} setZoom={setZoom} locale={locale} />
         </div>
       </div>
     </div>

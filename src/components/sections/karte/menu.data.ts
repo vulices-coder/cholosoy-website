@@ -1,11 +1,26 @@
 export const KARTE_SECTIONS = ["vorspeisen", "hauptspeisen", "desserts", "getraenke"] as const;
 export type KarteSection = (typeof KARTE_SECTIONS)[number];
+export type Locale = "de" | "es" | "en";
 
-export const SECTION_LABEL: Record<KarteSection, string> = {
-  vorspeisen: "VORSPEISEN",
-  hauptspeisen: "HAUPTSPEISEN",
-  desserts: "DESSERTS",
-  getraenke: "GETRÄNKE",
+export const SECTION_LABELS: Record<Locale, Record<KarteSection, string>> = {
+  de: {
+    vorspeisen: "VORSPEISEN",
+    hauptspeisen: "HAUPTSPEISEN",
+    desserts: "DESSERTS",
+    getraenke: "GETRÄNKE",
+  },
+  es: {
+    vorspeisen: "ENTRADAS",
+    hauptspeisen: "PLATOS PRINCIPALES",
+    desserts: "POSTRES",
+    getraenke: "BEBIDAS",
+  },
+  en: {
+    vorspeisen: "STARTERS",
+    hauptspeisen: "MAIN COURSES",
+    desserts: "DESSERTS",
+    getraenke: "DRINKS",
+  },
 };
 
 // // MVP: texto dummy (luego lo reemplazas por el menú real)
