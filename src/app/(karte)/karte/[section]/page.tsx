@@ -3,6 +3,9 @@ import { KARTE_SECTIONS, type KarteSection } from "@/components/sections/karte/m
 import { getMenuByCategory } from "@/lib/queries/menu";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function KarteSectionPage({
   params,
 }: {
