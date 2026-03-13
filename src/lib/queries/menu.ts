@@ -5,7 +5,14 @@ export async function getMenuItems() {
     orderBy: [{ category: "asc" }, { name: "asc" }],
   });
 
-  console.log("getMenuItems:", items.length);
+  console.log("[getMenuItems] total:", items.length);
+  console.log(
+    "[getMenuItems] categories:",
+    items.reduce<Record<string, number>>((acc, item) => {
+      acc[item.category] = (acc[item.category] || 0) + 1;
+      return acc;
+    }, {})
+  );
 
   return items;
 }
@@ -16,7 +23,7 @@ export async function getMenuByCategory(category: string) {
     orderBy: { name: "asc" },
   });
 
-  console.log("getMenuByCategory:", category, items.length);
+  console.log("[getMenuByCategory] category:", category, "count:", items.length);
 
   return items;
 }

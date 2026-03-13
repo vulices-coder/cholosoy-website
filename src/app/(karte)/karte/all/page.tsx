@@ -1,27 +1,23 @@
 import KartePage from "@/components/sections/karte/KartePage";
-import { KARTE_SECTIONS } from "@/components/sections/karte/menu.data";
-import { getMenuItems } from "@/lib/queries/menu";
-import styles from "./Page.module.scss";
+import { KARTE_SECTIONS, type KarteSection } from "@/components/sections/karte/menu.data";
+import { getMenuByCategory } from "@/lib/queries/menu";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default async function KarteAllPage() {
-  const allItems = await getMenuItems();
+export default async function KarteSectionPage({
+  params,
+}: {
+  params: Promise<{ section: string }>;
+}) {
+  const { section } = await params;
 
-  return (
-    <main className={styles.page}>
-      <div className={styles.grid}>
-        {KARTE_SECTIONS.map((section) => {
-          const items = allItems.filter((item) => item.category === section);
+  if (!KARTE_SECTIONS.includes(section as KarteSection)) {
+    notFound();
+  }
 
-          return (
-            <div key={section} className={styles.card}>
-              <KartePage section={section} items={items} />
-            </div>
-          );
-        })}
-      </div>
-    </main>
-  );
+  const items = await getMenuByCategory(section);
+
+  return <KartePage section={section as KarteSection} items={items} />;
 }
