@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import styles from "./KartePage.module.scss";
 import { SECTION_LABELS, type KarteSection, type Locale } from "./menu.data";
 import KarteToolbar from "./KarteToolbar";
@@ -16,14 +16,6 @@ type KarteItem = {
   imageUrl: string | null;
   slug: string;
 };
-
-function readLocaleCookie(): Locale {
-  if (typeof document === "undefined") return "de";
-  const m = document.cookie.match(/(?:^|;\s*)cholosoy_locale=([^;]+)/);
-  const raw = m ? decodeURIComponent(m[1]).toLowerCase() : "de";
-  if (raw === "de" || raw === "es" || raw === "en") return raw;
-  return "de";
-}
 
 function formatPrice(price: number) {
   return `${price.toFixed(2).replace(".", ",")} €`;
@@ -65,16 +57,13 @@ const UI_TEXT: Record<
 export default function KartePage({
   section,
   items,
+  locale,
 }: {
   section: KarteSection;
   items: KarteItem[];
+  locale: Locale;
 }) {
   const [zoom, setZoom] = useState(1);
-  const [locale, setLocale] = useState<Locale>("de");
-
-  useEffect(() => {
-    setLocale(readLocaleCookie());
-  }, []);
 
   const t = UI_TEXT[locale];
   const title = SECTION_LABELS[locale][section];

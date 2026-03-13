@@ -1,13 +1,25 @@
 import KartePage from "@/components/sections/karte/KartePage";
-import { KARTE_SECTIONS } from "@/components/sections/karte/menu.data";
+import { KARTE_SECTIONS, type Locale } from "@/components/sections/karte/menu.data";
 import { getMenuItems } from "@/lib/queries/menu";
 import styles from "./Page.module.scss";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+async function getLocaleFromCookie(): Promise<Locale> {
+  const store = await cookies();
+  const raw = store.get("cholosoy_locale")?.value?.toLowerCase();
+
+  if (raw === "de" || raw === "es" || raw === "en") return raw;
+  return "de";
+}
+
 export default async function KarteAllPage() {
-  const allItems = await getMenuItems();
+  const [allItems, locale] = await Promise.all([
+    getMenuItems(),
+    getLocaleFromCookie(),
+  ]);
 
   return (
     <main className={styles.page}>
@@ -17,7 +29,7 @@ export default async function KarteAllPage() {
 
           return (
             <div key={section} className={styles.card}>
-              <KartePage section={section} items={items} />
+              <KartePage section={section} items={items} locale={locale} />
             </div>
           );
         })}
