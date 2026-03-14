@@ -54,10 +54,13 @@ export default function EventCreateForm() {
       action={formAction}
       className="grid gap-5 rounded-3xl border border-black/10 bg-white p-6 shadow-sm"
     >
+      {/* TITLE */}
+
       <div className="grid gap-2">
         <label htmlFor="title" className="text-sm font-medium">
           Título
         </label>
+
         <input
           id="title"
           name="title"
@@ -70,10 +73,13 @@ export default function EventCreateForm() {
         />
       </div>
 
+      {/* SLUG */}
+
       <div className="grid gap-2">
         <label htmlFor="slug" className="text-sm font-medium">
           Slug
         </label>
+
         <input
           id="slug"
           name="slug"
@@ -88,10 +94,13 @@ export default function EventCreateForm() {
         />
       </div>
 
+      {/* DESCRIPTION */}
+
       <div className="grid gap-2">
         <label htmlFor="description" className="text-sm font-medium">
           Descripción
         </label>
+
         <textarea
           id="description"
           name="description"
@@ -101,10 +110,13 @@ export default function EventCreateForm() {
         />
       </div>
 
+      {/* DATE */}
+
       <div className="grid gap-2">
         <label htmlFor="date" className="text-sm font-medium">
           Fecha y hora
         </label>
+
         <input
           id="date"
           name="date"
@@ -114,10 +126,13 @@ export default function EventCreateForm() {
         />
       </div>
 
+      {/* LOCATION */}
+
       <div className="grid gap-2">
         <label htmlFor="location" className="text-sm font-medium">
           Ubicación
         </label>
+
         <input
           id="location"
           name="location"
@@ -127,10 +142,13 @@ export default function EventCreateForm() {
         />
       </div>
 
+      {/* IMAGE */}
+
       <div className="grid gap-2">
         <label htmlFor="image" className="text-sm font-medium">
           Imagen del evento
         </label>
+
         <input
           id="image"
           name="image"
@@ -140,14 +158,26 @@ export default function EventCreateForm() {
         />
       </div>
 
-      <label className="flex items-center gap-3 text-sm">
-        <input
-          type="checkbox"
-          name="isPublished"
-          className="h-4 w-4 rounded border border-black/20"
-        />
-        Publicar ahora
-      </label>
+      {/* STATUS */}
+
+      <div className="grid gap-2">
+        <label htmlFor="status" className="text-sm font-medium">
+          Estado
+        </label>
+
+        <select
+          id="status"
+          name="status"
+          defaultValue="DRAFT"
+          className="rounded-2xl border border-black/15 px-4 py-3 outline-none focus:border-black"
+        >
+          <option value="DRAFT">Borrador</option>
+          <option value="PUBLISHED">Publicado</option>
+          <option value="CANCELED">Cancelado</option>
+        </select>
+      </div>
+
+      {/* ERRORS */}
 
       {state.error ? (
         <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -160,6 +190,8 @@ export default function EventCreateForm() {
           Evento creado correctamente.
         </p>
       ) : null}
+
+      {/* SUBMIT */}
 
       <button
         type="submit"

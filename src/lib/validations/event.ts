@@ -7,7 +7,7 @@ export const eventSchema = z.object({
   date: z.string().min(1, "Date is required"),
   location: z.string().optional(),
   imageUrl: z.string().optional(),
-  isPublished: z.boolean().default(false),
+  status: z.enum(["DRAFT", "PUBLISHED", "CANCELED"]).default("DRAFT"),
 });
 
 export type EventInput = z.infer<typeof eventSchema>;

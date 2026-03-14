@@ -30,20 +30,17 @@ export async function createEventAction(
     const description = String(formData.get("description") || "");
     const date = String(formData.get("date") || "");
     const location = String(formData.get("location") || "");
-    const isPublished = formData.get("isPublished") === "on";
-
-    console.log("STEP 1 raw fields ok");
+    const status = String(formData.get("status") || "DRAFT") as
+      | "DRAFT"
+      | "PUBLISHED"
+      | "CANCELED";
 
     const fileEntry = formData.get("image");
     let imageUrl = "";
 
     if (fileEntry instanceof File && fileEntry.size > 0) {
-      console.log("STEP 2 uploading image:", fileEntry.name, fileEntry.type, fileEntry.size);
       const uploaded = await uploadEventImage(fileEntry);
       imageUrl = uploaded.publicUrl;
-      console.log("STEP 3 upload ok:", imageUrl);
-    } else {
-      console.log("STEP 2 no image uploaded");
     }
 
     const raw = {
@@ -53,22 +50,17 @@ export async function createEventAction(
       date,
       location,
       imageUrl,
-      isPublished,
+      status,
     };
-
-    console.log("STEP 4 parsed raw:", raw);
 
     const parsed = eventSchema.safeParse(raw);
 
     if (!parsed.success) {
-      console.error("VALIDATION ERROR:", parsed.error.flatten());
       return {
         success: false,
         error: parsed.error.issues[0]?.message || "Invalid form data",
       };
     }
-
-    console.log("STEP 5 validation ok");
 
     const created = await prisma.event.create({
       data: {
@@ -78,11 +70,11 @@ export async function createEventAction(
         date: new Date(parsed.data.date),
         location: parsed.data.location || null,
         imageUrl: parsed.data.imageUrl || null,
-        isPublished: parsed.data.isPublished,
+        status: parsed.data.status,
       },
     });
 
-    console.log("STEP 6 prisma create ok:", created.id);
+    console.log("STEP prisma create ok:", created.id);
 
     return { success: true };
   } catch (error) {

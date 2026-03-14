@@ -72,12 +72,14 @@ export default async function AdminEventsPage() {
                   <div>
                     <span
                       className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                        event.isPublished
+                        event.status === "PUBLISHED"
                           ? "bg-green-100 text-green-700"
+                          : event.status === "CANCELED"
+                          ? "bg-red-100 text-red-700"
                           : "bg-neutral-200 text-neutral-700"
                       }`}
                     >
-                      {event.isPublished ? "Published" : "Draft"}
+                      {event.status}
                     </span>
                   </div>
                 </div>

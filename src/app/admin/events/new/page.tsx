@@ -1,4 +1,4 @@
-import EventCreateForm from "@/components/admin/events/EventCreateForm";
+import EventCreateForm from "../../../../components/admin/events/EventCreateForm";
 
 export default function AdminEventNewPage() {
   return (
@@ -8,9 +8,11 @@ export default function AdminEventNewPage() {
           <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
             Admin
           </p>
+
           <h1 className="text-3xl font-semibold text-neutral-900">
             Crear nuevo evento
           </h1>
+
           <p className="text-sm text-neutral-600">
             Sube la imagen a Supabase Storage y guarda el evento en Neon con Prisma.
           </p>

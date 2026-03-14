@@ -11,7 +11,7 @@ export async function getEvents() {
 export async function getPublishedEvents() {
   return prisma.event.findMany({
     where: {
-      isPublished: true,
+      status: "PUBLISHED",
     },
     orderBy: {
       date: "asc",
@@ -20,11 +20,14 @@ export async function getPublishedEvents() {
 }
 
 export async function getUpcomingPublishedEvents() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   return prisma.event.findMany({
     where: {
-      isPublished: true,
+      status: "PUBLISHED",
       date: {
-        gte: new Date(),
+        gte: today,
       },
     },
     orderBy: {
