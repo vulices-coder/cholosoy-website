@@ -24,6 +24,8 @@ function getMonthTitle(date: Date | null) {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function VeranstaltungPage() {
   const dbEvents = await getPublishedEvents();
 
