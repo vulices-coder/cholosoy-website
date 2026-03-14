@@ -1,0 +1,49 @@
+.page {
+  min-height: 100vh;
+  background: #f7f7f7;
+  padding: 48px 24px;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.header {
+  display: grid;
+  gap: 8px;
+}
+
+.kicker {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #737373;
+}
+
+.title {
+  font-size: 48px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #111111;
+}
+
+.text {
+  font-size: 14px;
+  color: #525252;
+}
+
+.back {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.back:hover {
+  text-decoration: underline;
+}

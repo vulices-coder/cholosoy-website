@@ -2,43 +2,50 @@
 
 import Image from "next/image";
 import { useActionState, useEffect, useMemo, useRef, useState } from "react";
-import {
-  createEventAction,
-  type CreateEventState,
-} from "@/actions/events";
-import styles from "./EventCreateForm.module.scss";
+import { updateEventAction, type UpdateEventState } from "@/actions/events";
+import styles from "./EditEventForm.module.scss";
 
-const initialState: CreateEventState = {
+type EventData = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  date: Date;
+  location: string | null;
+  imageUrl: string | null;
+  status: "DRAFT" | "PUBLISHED" | "CANCELED";
+};
+
+const initialState: UpdateEventState = {
   success: false,
 };
 
-export default function EventCreateForm() {
+function toDateTimeLocal(date: Date | string) {
+  const d = new Date(date);
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  const year = d.getFullYear();
+  const month = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  const hours = pad(d.getHours());
+  const minutes = pad(d.getMinutes());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+export default function EditEventForm({ event }: { event: EventData }) {
+  const boundAction = useMemo(
+    () => updateEventAction.bind(null, event.id),
+    [event.id]
+  );
+
   const [state, formAction, pending] = useActionState(
-    createEventAction,
+    boundAction,
     initialState
   );
 
-  const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [title, setTitle] = useState("");
-  const [slugTouched, setSlugTouched] = useState(false);
-  const [slug, setSlug] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  useEffect(() => {
-    if (state.success) {
-      formRef.current?.reset();
-      setTitle("");
-      setSlug("");
-      setSlugTouched(false);
-      setSelectedFile(null);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  }, [state.success]);
 
   const previewUrl = useMemo(() => {
     if (!selectedFile) return null;
@@ -51,26 +58,17 @@ export default function EventCreateForm() {
     };
   }, [previewUrl]);
 
-  function makeSlug(value: string) {
-    return value
-      .toLowerCase()
-      .trim()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
-  }
-
-  function handleTitleChange(value: string) {
-    setTitle(value);
-    if (!slugTouched) {
-      setSlug(makeSlug(value));
+  useEffect(() => {
+    if (state.success && fileInputRef.current) {
+      fileInputRef.current.value = "";
+      setSelectedFile(null);
     }
-  }
+  }, [state.success]);
+
+  const currentImage = previewUrl || event.imageUrl || null;
 
   return (
-    <form ref={formRef} action={formAction} className={styles.form}>
+    <form action={formAction} autoComplete="off" className={styles.form}>
       <div className={styles.field}>
         <label htmlFor="title" className={styles.label}>
           Título
@@ -79,11 +77,9 @@ export default function EventCreateForm() {
           id="title"
           name="title"
           type="text"
-          value={title}
-          onChange={(e) => handleTitleChange(e.target.value)}
+          defaultValue={event.title}
           required
           className={styles.input}
-          placeholder="Salsa Night"
         />
       </div>
 
@@ -95,13 +91,8 @@ export default function EventCreateForm() {
           id="slug"
           name="slug"
           type="text"
-          value={slug}
-          onChange={(e) => {
-            setSlugTouched(true);
-            setSlug(makeSlug(e.target.value));
-          }}
+          defaultValue={event.slug}
           className={styles.input}
-          placeholder="salsa-night"
         />
       </div>
 
@@ -113,8 +104,8 @@ export default function EventCreateForm() {
           id="description"
           name="description"
           rows={5}
+          defaultValue={event.description ?? ""}
           className={styles.textarea}
-          placeholder="Descripción del evento..."
         />
       </div>
 
@@ -126,6 +117,7 @@ export default function EventCreateForm() {
           id="date"
           name="date"
           type="datetime-local"
+          defaultValue={toDateTimeLocal(event.date)}
           required
           className={styles.input}
         />
@@ -139,15 +131,14 @@ export default function EventCreateForm() {
           id="location"
           name="location"
           type="text"
-          defaultValue="CholoSoy — Berlin"
+          defaultValue={event.location ?? ""}
           className={styles.input}
-          placeholder="CholoSoy — Berlin"
         />
       </div>
 
       <div className={styles.field}>
         <label htmlFor="image" className={styles.label}>
-          Imagen del evento
+          Reemplazar imagen
         </label>
         <input
           ref={fileInputRef}
@@ -163,17 +154,19 @@ export default function EventCreateForm() {
         />
       </div>
 
-      {previewUrl ? (
+      {currentImage ? (
         <div className={styles.previewCard}>
-          <p className={styles.previewLabel}>Vista previa</p>
+          <p className={styles.previewLabel}>
+            {previewUrl ? "Nueva vista previa" : "Imagen actual"}
+          </p>
           <div className={styles.previewMedia}>
             <Image
-              src={previewUrl}
+              src={currentImage}
               alt="Vista previa de la imagen del evento"
               fill
               sizes="(max-width: 768px) 100vw, 640px"
               className={styles.previewImage}
-              unoptimized
+              unoptimized={Boolean(previewUrl)}
             />
           </div>
         </div>
@@ -186,7 +179,7 @@ export default function EventCreateForm() {
         <select
           id="status"
           name="status"
-          defaultValue="DRAFT"
+          defaultValue={event.status}
           className={styles.select}
         >
           <option value="DRAFT">Borrador</option>
@@ -198,11 +191,11 @@ export default function EventCreateForm() {
       {state.error ? <p className={styles.error}>{state.error}</p> : null}
 
       {state.success ? (
-        <p className={styles.success}>Evento creado correctamente.</p>
+        <p className={styles.success}>Evento actualizado correctamente.</p>
       ) : null}
 
       <button type="submit" disabled={pending} className={styles.button}>
-        {pending ? "Guardando..." : "Crear evento"}
+        {pending ? "Guardando..." : "Actualizar evento"}
       </button>
     </form>
   );

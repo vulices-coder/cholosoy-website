@@ -1,0 +1,32 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.publish {
+  color: #15803d;
+}
+
+.cancel {
+  color: #b45309;
+}
+
+.delete {
+  color: #b91c1c;
+}

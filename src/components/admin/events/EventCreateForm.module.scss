@@ -1,0 +1,105 @@
+.form {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.input,
+.textarea,
+.select,
+.file {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: #111111;
+}
+
+.textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.error {
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 14px;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.success {
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 14px;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.button {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #111111;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.previewCard {
+  display: grid;
+  gap: 10px;
+}
+
+.previewLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.previewMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f2f2f2;
+}
+
+.previewImage {
+  object-fit: cover;
+}
