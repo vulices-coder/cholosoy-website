@@ -1,4 +1,8 @@
 import { prisma } from "@/lib/db";
+import { Prisma } from "@prisma/client";
+
+type EventStatusFilter = "ALL" | "DRAFT" | "PUBLISHED" | "CANCELED";
+type EventSort = "date-asc" | "date-desc" | "created-desc";
 
 export async function getEvents() {
   return prisma.event.findMany({
@@ -36,10 +40,54 @@ export async function getUpcomingPublishedEvents() {
   });
 }
 
-export async function getAdminEvents() {
+export async function getAdminEvents(options?: {
+  status?: EventStatusFilter;
+  sort?: EventSort;
+}) {
+  const status = options?.status ?? "ALL";
+  const sort = options?.sort ?? "date-asc";
+
+  const where: Prisma.EventWhereInput =
+    status === "ALL"
+      ? {}
+      : {
+          status,
+        };
+
+  const orderBy: Prisma.EventOrderByWithRelationInput =
+    sort === "date-desc"
+      ? { date: "desc" }
+      : sort === "created-desc"
+      ? { createdAt: "desc" }
+      : { date: "asc" };
+
   return prisma.event.findMany({
-    orderBy: {
-      date: "desc",
+    where,
+    orderBy,
+  });
+}
+
+export async function duplicateEventById(id: string) {
+  const event = await prisma.event.findUnique({
+    where: { id },
+  });
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  const duplicatedDate = new Date(event.date);
+  duplicatedDate.setDate(duplicatedDate.getDate() + 7);
+
+  return prisma.event.create({
+    data: {
+      title: `${event.title} (Copy)`,
+      slug: `${event.slug}-copy-${Date.now()}`,
+      description: event.description,
+      date: duplicatedDate,
+      location: event.location,
+      imageUrl: event.imageUrl,
+      status: "DRAFT",
     },
   });
 }

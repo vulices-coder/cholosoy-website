@@ -1,0 +1,32 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+}
+
+.group {
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #525252;
+}
+
+.select {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+}
+
+.select:focus {
+  border-color: #111111;
+}

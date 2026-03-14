@@ -8,17 +8,31 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model EventTranslation {
+  id          String   @id @default(cuid())
+  eventId      String
+  locale       String
+  title        String
+  description  String?
+
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, locale])
+  @@index([locale])
+}
+
 model Event {
-  id          String      @id @default(uuid())
-  title       String
-  slug        String      @unique
-  description String?
-  date        DateTime
-  location    String?
-  imageUrl    String?
-  status      EventStatus @default(DRAFT)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id            String             @id @default(uuid())
+  title         String
+  slug          String             @unique
+  description   String?
+  date          DateTime
+  location      String?
+  imageUrl      String?
+  status        EventStatus        @default(DRAFT)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  translations  EventTranslation[]
 
   @@index([date])
   @@index([slug])

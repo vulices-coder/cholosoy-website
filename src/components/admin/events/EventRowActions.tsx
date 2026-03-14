@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import {
   cancelEventAction,
   deleteEventAction,
+  duplicateEventAction,
   publishEventAction,
 } from "@/actions/events";
 import styles from "./EventRowActions.module.scss";
@@ -18,6 +19,19 @@ export default function EventRowActions({ eventId, status }: Props) {
 
   return (
     <div className={styles.actions}>
+      <button
+        type="button"
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            await duplicateEventAction(eventId);
+          })
+        }
+        className={`${styles.button} ${styles.duplicate}`}
+      >
+        Duplicar
+      </button>
+
       {status !== "PUBLISHED" ? (
         <button
           type="button"

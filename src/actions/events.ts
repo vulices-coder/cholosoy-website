@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { eventSchema } from "@/lib/validations/event";
 import { uploadEventImage } from "@/lib/supabase-storage";
+import { duplicateEventById } from "@/lib/queries/events";
 
 export type CreateEventState = {
   success: boolean;
@@ -247,6 +248,26 @@ export async function deleteEventAction(eventId: string) {
     return {
       success: false,
       error: error instanceof Error ? error.message : "Could not delete event",
+    };
+  }
+}
+
+export async function duplicateEventAction(eventId: string) {
+  try {
+    await duplicateEventById(eventId);
+
+    revalidatePath("/admin/events");
+    revalidatePath("/de/veranstaltung");
+    revalidatePath("/es/veranstaltung");
+    revalidatePath("/en/veranstaltung");
+
+    return { success: true };
+  } catch (error) {
+    console.error("duplicateEventAction error:", error);
+
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Could not duplicate event",
     };
   }
 }

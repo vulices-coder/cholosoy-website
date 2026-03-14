@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAdminEvents } from "@/lib/queries/events";
 import EventRowActions from "../../../components/admin/events/EventRowActions";
+import EventFilters from "../../../components/admin/events/EventFilters";
 import styles from "./AdminEventsPage.module.scss";
 
 function formatDate(date: Date) {
@@ -10,8 +11,20 @@ function formatDate(date: Date) {
   }).format(new Date(date));
 }
 
-export default async function AdminEventsPage() {
-  const events = await getAdminEvents();
+type Props = {
+  searchParams: Promise<{
+    status?: "ALL" | "DRAFT" | "PUBLISHED" | "CANCELED";
+    sort?: "date-asc" | "date-desc" | "created-desc";
+  }>;
+};
+
+export default async function AdminEventsPage({ searchParams }: Props) {
+  const params = await searchParams;
+
+  const events = await getAdminEvents({
+    status: params.status ?? "ALL",
+    sort: params.sort ?? "date-asc",
+  });
 
   return (
     <main className={styles.page}>
@@ -27,6 +40,8 @@ export default async function AdminEventsPage() {
             Neues Event
           </Link>
         </div>
+
+        <EventFilters />
 
         <div className={styles.card}>
           <div className={styles.tableHead}>
