@@ -8,15 +8,35 @@ export async function getEvents() {
   });
 }
 
-export async function getUpcomingEvents() {
+export async function getPublishedEvents() {
   return prisma.event.findMany({
     where: {
+      isPublished: true,
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+}
+
+export async function getUpcomingPublishedEvents() {
+  return prisma.event.findMany({
+    where: {
+      isPublished: true,
       date: {
         gte: new Date(),
       },
     },
     orderBy: {
       date: "asc",
+    },
+  });
+}
+
+export async function getAdminEvents() {
+  return prisma.event.findMany({
+    orderBy: {
+      date: "desc",
     },
   });
 }
