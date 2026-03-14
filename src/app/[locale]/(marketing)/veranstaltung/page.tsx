@@ -1,6 +1,9 @@
 import EventsBoard from "@/components/sections/events/EventsBoard";
-import { getPublishedEvents } from "@/lib/queries/events";
+import { getUpcomingPublishedEvents } from "@/lib/queries/events";
 import styles from "./EventsPage.module.scss";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function formatEventDate(date: Date) {
   return new Intl.DateTimeFormat("de-DE", {
@@ -24,10 +27,8 @@ function getMonthTitle(date: Date | null) {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function VeranstaltungPage() {
-  const dbEvents = await getPublishedEvents();
+  const dbEvents = await getUpcomingPublishedEvents();
 
   const events = dbEvents.map((event) => ({
     id: event.id,
