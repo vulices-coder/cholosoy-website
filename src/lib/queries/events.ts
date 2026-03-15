@@ -3,11 +3,15 @@ import { Prisma } from "@prisma/client";
 
 type EventStatusFilter = "ALL" | "DRAFT" | "PUBLISHED" | "CANCELED";
 type EventSort = "date-asc" | "date-desc" | "created-desc";
+type Locale = "de" | "es" | "en";
 
 export async function getEvents() {
   return prisma.event.findMany({
     orderBy: {
       date: "asc",
+    },
+    include: {
+      translations: true,
     },
   });
 }
@@ -20,14 +24,17 @@ export async function getPublishedEvents() {
     orderBy: {
       date: "asc",
     },
+    include: {
+      translations: true,
+    },
   });
 }
 
-export async function getUpcomingPublishedEvents() {
+export async function getUpcomingPublishedEvents(locale?: Locale) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return prisma.event.findMany({
+  const events = await prisma.event.findMany({
     where: {
       status: "PUBLISHED",
       date: {
@@ -37,6 +44,21 @@ export async function getUpcomingPublishedEvents() {
     orderBy: {
       date: "asc",
     },
+    include: {
+      translations: true,
+    },
+  });
+
+  if (!locale) return events;
+
+  return events.map((event) => {
+    const translation = event.translations.find((t) => t.locale === locale);
+
+    return {
+      ...event,
+      title: translation?.title ?? event.title,
+      description: translation?.description ?? event.description,
+    };
   });
 }
 
@@ -64,12 +86,18 @@ export async function getAdminEvents(options?: {
   return prisma.event.findMany({
     where,
     orderBy,
+    include: {
+      translations: true,
+    },
   });
 }
 
 export async function duplicateEventById(id: string) {
   const event = await prisma.event.findUnique({
     where: { id },
+    include: {
+      translations: true,
+    },
   });
 
   if (!event) {
@@ -88,6 +116,13 @@ export async function duplicateEventById(id: string) {
       location: event.location,
       imageUrl: event.imageUrl,
       status: "DRAFT",
+      translations: {
+        create: event.translations.map((translation) => ({
+          locale: translation.locale,
+          title: `${translation.title} (Copy)`,
+          description: translation.description,
+        })),
+      },
     },
   });
 }
@@ -97,6 +132,9 @@ export async function getEventBySlug(slug: string) {
     where: {
       slug,
     },
+    include: {
+      translations: true,
+    },
   });
 }
 
@@ -104,6 +142,9 @@ export async function getEventById(id: string) {
   return prisma.event.findUnique({
     where: {
       id,
+    },
+    include: {
+      translations: true,
     },
   });
 }

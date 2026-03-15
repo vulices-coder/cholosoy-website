@@ -5,6 +5,12 @@ import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { updateEventAction, type UpdateEventState } from "@/actions/events";
 import styles from "./EditEventForm.module.scss";
 
+type Translation = {
+  locale: string;
+  title: string;
+  description: string | null;
+};
+
 type EventData = {
   id: string;
   title: string;
@@ -14,6 +20,7 @@ type EventData = {
   location: string | null;
   imageUrl: string | null;
   status: "DRAFT" | "PUBLISHED" | "CANCELED";
+  translations: Translation[];
 };
 
 const initialState: UpdateEventState = {
@@ -33,6 +40,13 @@ function toDateTimeLocal(date: Date | string) {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+function getTranslation(
+  translations: Translation[],
+  locale: "de" | "es" | "en"
+) {
+  return translations.find((t) => t.locale === locale);
+}
+
 export default function EditEventForm({ event }: { event: EventData }) {
   const boundAction = useMemo(
     () => updateEventAction.bind(null, event.id),
@@ -46,6 +60,20 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [title, setTitle] = useState(event.title);
+  const [description, setDescription] = useState(event.description ?? "");
+
+  const de = getTranslation(event.translations, "de");
+  const es = getTranslation(event.translations, "es");
+  const en = getTranslation(event.translations, "en");
+
+  const [titleDe, setTitleDe] = useState(de?.title ?? "");
+  const [descriptionDe, setDescriptionDe] = useState(de?.description ?? "");
+  const [titleEs, setTitleEs] = useState(es?.title ?? "");
+  const [descriptionEs, setDescriptionEs] = useState(es?.description ?? "");
+  const [titleEn, setTitleEn] = useState(en?.title ?? "");
+  const [descriptionEn, setDescriptionEn] = useState(en?.description ?? "");
 
   const previewUrl = useMemo(() => {
     if (!selectedFile) return null;
@@ -65,19 +93,44 @@ export default function EditEventForm({ event }: { event: EventData }) {
     }
   }, [state.success]);
 
+  function copyBaseToAll() {
+    setTitleDe(title);
+    setDescriptionDe(description);
+    setTitleEs(title);
+    setDescriptionEs(description);
+    setTitleEn(title);
+    setDescriptionEn(description);
+  }
+
+  function copyBaseToDe() {
+    setTitleDe(title);
+    setDescriptionDe(description);
+  }
+
+  function copyBaseToEs() {
+    setTitleEs(title);
+    setDescriptionEs(description);
+  }
+
+  function copyBaseToEn() {
+    setTitleEn(title);
+    setDescriptionEn(description);
+  }
+
   const currentImage = previewUrl || event.imageUrl || null;
 
   return (
     <form action={formAction} autoComplete="off" className={styles.form}>
       <div className={styles.field}>
         <label htmlFor="title" className={styles.label}>
-          Título
+          Título base
         </label>
         <input
           id="title"
           name="title"
           type="text"
-          defaultValue={event.title}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           required
           className={styles.input}
         />
@@ -98,13 +151,121 @@ export default function EditEventForm({ event }: { event: EventData }) {
 
       <div className={styles.field}>
         <label htmlFor="description" className={styles.label}>
-          Descripción
+          Descripción base
         </label>
         <textarea
           id="description"
           name="description"
           rows={5}
-          defaultValue={event.description ?? ""}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className={styles.textarea}
+        />
+      </div>
+
+      <div
+        className={styles.field}
+        style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
+      >
+        <button
+          type="button"
+          onClick={copyBaseToAll}
+          className={styles.button}
+          style={{ width: "auto", padding: "10px 14px" }}
+        >
+          Copiar base → todos
+        </button>
+
+        <button
+          type="button"
+          onClick={copyBaseToDe}
+          className={styles.button}
+          style={{ width: "auto", padding: "10px 14px" }}
+        >
+          Copiar → DE
+        </button>
+
+        <button
+          type="button"
+          onClick={copyBaseToEs}
+          className={styles.button}
+          style={{ width: "auto", padding: "10px 14px" }}
+        >
+          Copiar → ES
+        </button>
+
+        <button
+          type="button"
+          onClick={copyBaseToEn}
+          className={styles.button}
+          style={{ width: "auto", padding: "10px 14px" }}
+        >
+          Copiar → EN
+        </button>
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>Título alemán</label>
+        <input
+          name="title_de"
+          type="text"
+          value={titleDe}
+          onChange={(e) => setTitleDe(e.target.value)}
+          className={styles.input}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>Descripción alemana</label>
+        <textarea
+          name="description_de"
+          rows={4}
+          value={descriptionDe}
+          onChange={(e) => setDescriptionDe(e.target.value)}
+          className={styles.textarea}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>Título español</label>
+        <input
+          name="title_es"
+          type="text"
+          value={titleEs}
+          onChange={(e) => setTitleEs(e.target.value)}
+          className={styles.input}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>Descripción española</label>
+        <textarea
+          name="description_es"
+          rows={4}
+          value={descriptionEs}
+          onChange={(e) => setDescriptionEs(e.target.value)}
+          className={styles.textarea}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>English title</label>
+        <input
+          name="title_en"
+          type="text"
+          value={titleEn}
+          onChange={(e) => setTitleEn(e.target.value)}
+          className={styles.input}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.label}>English description</label>
+        <textarea
+          name="description_en"
+          rows={4}
+          value={descriptionEn}
+          onChange={(e) => setDescriptionEn(e.target.value)}
           className={styles.textarea}
         />
       </div>

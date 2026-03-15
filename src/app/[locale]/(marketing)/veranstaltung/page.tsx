@@ -5,8 +5,20 @@ import styles from "./EventsPage.module.scss";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function formatEventDate(date: Date) {
-  return new Intl.DateTimeFormat("de-DE", {
+type Locale = "de" | "es" | "en";
+
+type Props = {
+  params: Promise<{ locale: Locale }>;
+};
+
+function getIntlLocale(locale: Locale) {
+  if (locale === "es") return "es-ES";
+  if (locale === "en") return "en-US";
+  return "de-DE";
+}
+
+function formatEventDate(date: Date, locale: Locale) {
+  return new Intl.DateTimeFormat(getIntlLocale(locale), {
     weekday: "short",
     day: "2-digit",
     month: "2-digit",
@@ -16,10 +28,22 @@ function formatEventDate(date: Date) {
   }).format(new Date(date));
 }
 
-function getMonthTitle(date: Date | null) {
-  if (!date) return "Veranstaltung";
+function getPageTitle(locale: Locale) {
+  if (locale === "es") return "Eventos";
+  if (locale === "en") return "Events";
+  return "Veranstaltung";
+}
 
-  const formatted = new Intl.DateTimeFormat("de-DE", {
+function getEmptyText(locale: Locale) {
+  if (locale === "es") return "No se encontraron eventos publicados.";
+  if (locale === "en") return "No published events found.";
+  return "Keine veröffentlichten Events gefunden.";
+}
+
+function getMonthTitle(date: Date | null, locale: Locale) {
+  if (!date) return getPageTitle(locale);
+
+  const formatted = new Intl.DateTimeFormat(getIntlLocale(locale), {
     month: "long",
     year: "numeric",
   }).format(new Date(date));
@@ -27,18 +51,20 @@ function getMonthTitle(date: Date | null) {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
-export default async function VeranstaltungPage() {
-  const dbEvents = await getUpcomingPublishedEvents();
+export default async function VeranstaltungPage({ params }: Props) {
+  const { locale } = await params;
+
+  const dbEvents = await getUpcomingPublishedEvents(locale);
 
   const events = dbEvents.map((event) => ({
     id: event.id,
     title: event.title,
     description: event.description ?? "",
-    dateLabel: formatEventDate(event.date),
+    dateLabel: formatEventDate(event.date, locale),
     imageSrc: event.imageUrl || "/images/events/opening.jpg",
   }));
 
-  const heading = getMonthTitle(dbEvents[0]?.date ?? null);
+  const heading = getMonthTitle(dbEvents[0]?.date ?? null, locale);
 
   return (
     <main className={styles.page}>
@@ -47,10 +73,10 @@ export default async function VeranstaltungPage() {
           <section className={styles.page}>
             <div className={styles.content}>
               <h1 style={{ textAlign: "center", marginTop: "2rem" }}>
-                Veranstaltung
+                {getPageTitle(locale)}
               </h1>
               <p style={{ textAlign: "center", marginTop: "1rem" }}>
-                Keine veröffentlichten Events gefunden.
+                {getEmptyText(locale)}
               </p>
             </div>
           </section>

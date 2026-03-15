@@ -2,9 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
+import { duplicateEventById } from "@/lib/queries/events";
 import { eventSchema } from "@/lib/validations/event";
 import { uploadEventImage } from "@/lib/supabase-storage";
-import { duplicateEventById } from "@/lib/queries/events";
 
 export type CreateEventState = {
   success: boolean;
@@ -27,6 +27,24 @@ function slugify(value: string) {
     .replace(/-+/g, "-");
 }
 
+function getTranslationsFromFormData(formData: FormData) {
+  return ["de", "es", "en"].map((locale) => ({
+    locale: locale as "de" | "es" | "en",
+    title: String(formData.get(`title_${locale}`) || "").trim(),
+    description: String(formData.get(`description_${locale}`) || "").trim(),
+  }));
+}
+
+function cleanTranslations(
+  translations: Array<{
+    locale: "de" | "es" | "en";
+    title: string;
+    description: string;
+  }>
+) {
+  return translations.filter((t) => t.title.length > 0);
+}
+
 export async function createEventAction(
   _prevState: CreateEventState,
   formData: FormData
@@ -41,6 +59,8 @@ export async function createEventAction(
       | "DRAFT"
       | "PUBLISHED"
       | "CANCELED";
+
+    const translations = cleanTranslations(getTranslationsFromFormData(formData));
 
     const fileEntry = formData.get("image");
     let imageUrl = "";
@@ -58,6 +78,7 @@ export async function createEventAction(
       location,
       imageUrl,
       status,
+      translations,
     };
 
     const parsed = eventSchema.safeParse(raw);
@@ -78,6 +99,13 @@ export async function createEventAction(
         location: parsed.data.location || null,
         imageUrl: parsed.data.imageUrl || null,
         status: parsed.data.status,
+        translations: {
+          create: parsed.data.translations.map((translation) => ({
+            locale: translation.locale,
+            title: translation.title,
+            description: translation.description || null,
+          })),
+        },
       },
     });
 
@@ -113,6 +141,8 @@ export async function updateEventAction(
       | "PUBLISHED"
       | "CANCELED";
 
+    const translations = cleanTranslations(getTranslationsFromFormData(formData));
+
     const currentEvent = await prisma.event.findUnique({
       where: { id: eventId },
     });
@@ -140,6 +170,7 @@ export async function updateEventAction(
       location,
       imageUrl,
       status,
+      translations,
     };
 
     const parsed = eventSchema.safeParse(raw);
@@ -161,6 +192,14 @@ export async function updateEventAction(
         location: parsed.data.location || null,
         imageUrl: parsed.data.imageUrl || null,
         status: parsed.data.status,
+        translations: {
+          deleteMany: {},
+          create: parsed.data.translations.map((translation) => ({
+            locale: translation.locale,
+            title: translation.title,
+            description: translation.description || null,
+          })),
+        },
       },
     });
 
