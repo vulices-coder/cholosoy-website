@@ -61,7 +61,7 @@ export default async function VeranstaltungPage({ params }: Props) {
     title: event.title,
     description: event.description ?? "",
     dateLabel: formatEventDate(event.date, locale),
-    imageSrc: event.imageUrl || "/images/events/opening.jpg",
+    imageSrc: event.imageUrl || "/images/events/01.jpg",
   }));
 
   const heading = getMonthTitle(dbEvents[0]?.date ?? null, locale);

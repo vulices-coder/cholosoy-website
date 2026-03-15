@@ -2,13 +2,26 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Container from "@/components/ui/Container";
 import styles from "./GalleryRail.module.scss";
 
 const LOCALES = new Set(["de", "es", "en"]);
 
 type Locale = "de" | "es" | "en";
+
+type GalleryImageItem = {
+  id: string;
+  url: string;
+  category: string;
+  alt: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type GalleryRailProps = {
+  images: GalleryImageItem[];
+};
 
 function getLocaleFromPath(pathname: string): Locale {
   const first = pathname.split("/")[1];
@@ -19,93 +32,200 @@ const GALLERY_DICT: Record<
   Locale,
   {
     title: string;
-    altPrefix: string;
+    subtitle: string;
     ariaLabel: string;
   }
 > = {
   de: {
     title: "Galerie",
-    altPrefix: "CholoSoy Galerie",
+    subtitle: "Aromen, Farben und Momente von CholoSoy",
     ariaLabel: "Galerie Bilder",
   },
   es: {
     title: "Galería",
-    altPrefix: "Galería CholoSoy",
+    subtitle: "Sabores, colores y momentos de CholoSoy",
     ariaLabel: "Imágenes de la galería",
   },
   en: {
     title: "Gallery",
-    altPrefix: "CholoSoy Gallery",
+    subtitle: "Flavors, colors and moments of CholoSoy",
     ariaLabel: "Gallery images",
   },
 };
 
-export default function GalleryRail() {
+export default function GalleryRail({ images }: GalleryRailProps) {
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
   const t = GALLERY_DICT[locale];
 
-  const images = Array.from({ length: 34 }, (_, i) => {
-    const num = String(i + 1).padStart(2, "0");
-    return {
-      src: `/images/gallery/${num}.png`,
-      alt: `${t.altPrefix} ${num}`,
-    };
-  });
-
+  const sectionRef = useRef<HTMLElement | null>(null);
   const railRef = useRef<HTMLDivElement | null>(null);
-  const isDownRef = useRef(false);
+
+  const pointerDownRef = useRef(false);
+  const dragStartedRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftRef = useRef(0);
+
   const [isDragging, setIsDragging] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [isCompactLayout, setIsCompactLayout] = useState(false);
+
+  const DRAG_THRESHOLD = 8;
+
+  useEffect(() => {
+    const checkViewport = () => {
+      setIsCompactLayout(window.innerWidth <= 900);
+    };
+
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+
+    return () => {
+      window.removeEventListener("resize", checkViewport);
+    };
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || isCompactLayout) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const canScroll = rail.scrollWidth > rail.clientWidth;
+      if (!canScroll) return;
+
+      const dominantDelta =
+        Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+
+      e.preventDefault();
+      rail.scrollLeft += dominantDelta;
+    };
+
+    rail.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      rail.removeEventListener("wheel", handleWheel);
+    };
+  }, [isCompactLayout]);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isCompactLayout) return;
+
     const rail = railRef.current;
     if (!rail) return;
 
-    isDownRef.current = true;
-    setIsDragging(true);
+    pointerDownRef.current = true;
+    dragStartedRef.current = false;
     startXRef.current = e.clientX;
     scrollLeftRef.current = rail.scrollLeft;
-    rail.setPointerCapture(e.pointerId);
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isCompactLayout) return;
+
     const rail = railRef.current;
-    if (!rail || !isDownRef.current) return;
+    if (!rail || !pointerDownRef.current) return;
 
     const dx = e.clientX - startXRef.current;
-    rail.scrollLeft = scrollLeftRef.current - dx;
-  };
 
-  const endDrag = (e?: React.PointerEvent<HTMLDivElement>) => {
-    const rail = railRef.current;
-    if (!rail) return;
+    if (!dragStartedRef.current && Math.abs(dx) > DRAG_THRESHOLD) {
+      dragStartedRef.current = true;
+      setIsDragging(true);
+    }
 
-    isDownRef.current = false;
-    setIsDragging(false);
-
-    if (e) {
-      try {
-        rail.releasePointerCapture(e.pointerId);
-      } catch {}
+    if (dragStartedRef.current) {
+      rail.scrollLeft = scrollLeftRef.current - dx;
     }
   };
 
-  const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+  const endDrag = () => {
+    pointerDownRef.current = false;
+    dragStartedRef.current = false;
+    setIsDragging(false);
+  };
+
+  const handleSectionMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    section.style.setProperty("--mouse-x", `${x}px`);
+    section.style.setProperty("--mouse-y", `${y}px`);
+    section.style.setProperty("--glow-opacity", "1");
+  };
+
+  const handleSectionMouseLeave = () => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    section.style.setProperty("--glow-opacity", "0");
+  };
+
+  const centerCardDesktop = (index: number) => {
     const rail = railRef.current;
     if (!rail) return;
 
-    e.preventDefault();
-    rail.scrollLeft += Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    const card = rail.children[index] as HTMLElement | undefined;
+    if (!card) return;
+
+    const railCenter = rail.clientWidth / 2;
+    const cardCenter = card.offsetLeft + card.clientWidth / 2;
+    const targetLeft = cardCenter - railCenter;
+
+    rail.scrollTo({
+      left: targetLeft,
+      behavior: "smooth",
+    });
+  };
+
+  const centerCardCompact = (index: number) => {
+    const rail = railRef.current;
+    if (!rail) return;
+
+    const card = rail.children[index] as HTMLElement | undefined;
+    if (!card) return;
+
+    card.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  };
+
+  const handleCardClick = (index: number) => {
+    if (dragStartedRef.current) return;
+
+    setActiveIndex((prev) => {
+      const next = prev === index ? null : index;
+
+      if (next !== null) {
+        requestAnimationFrame(() => {
+          if (isCompactLayout) {
+            centerCardCompact(next);
+          } else {
+            centerCardDesktop(next);
+          }
+        });
+      }
+
+      return next;
+    });
   };
 
   return (
-    <section className={styles.section}>
+    <section
+      ref={sectionRef}
+      className={styles.section}
+      onMouseMove={handleSectionMouseMove}
+      onMouseLeave={handleSectionMouseLeave}
+    >
       <Container size="lg">
         <div className={styles.stage}>
           <header className={styles.header}>
             <h1 className={styles.title}>{t.title}</h1>
+            <p className={styles.subtitle}>{t.subtitle}</p>
           </header>
 
           <div
@@ -117,20 +237,29 @@ export default function GalleryRail() {
             onPointerUp={endDrag}
             onPointerLeave={endDrag}
             onPointerCancel={endDrag}
-            onWheel={onWheel}
           >
-            {images.map((img) => (
-              <figure key={img.src} className={styles.card}>
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className={styles.image}
-                  sizes="(max-width: 600px) 22vw, (max-width: 1100px) 23vw, 24vw"
-                  draggable={false}
-                />
-              </figure>
-            ))}
+            {images.map((img, index) => {
+              const isActive = activeIndex === index;
+
+              return (
+                <figure
+                  key={img.id}
+                  className={styles.card}
+                  data-active={isActive ? "true" : "false"}
+                  onClick={() => handleCardClick(index)}
+                >
+                  <Image
+                    src={img.url}
+                    alt={img.alt}
+                    fill
+                    className={styles.image}
+                    sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 24vw"
+                    draggable={false}
+                    loading={index < 4 ? "eager" : "lazy"}
+                  />
+                </figure>
+              );
+            })}
           </div>
         </div>
       </Container>

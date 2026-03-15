@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 export async function getGalleryImages() {
   return prisma.galleryImage.findMany({
     orderBy: {
-      createdAt: "desc",
+      createdAt: "asc",
     },
   });
 }
@@ -22,7 +22,7 @@ export async function getGalleryImagesByCategory(category: string) {
       category,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "asc",
     },
   });
 }

@@ -7,21 +7,25 @@ async function main() {
   console.log("🌱 Seeding database...");
 
   await prisma.event.upsert({
-    where: { slug: "opening-night" },
-    update: {
-      title: "Opening Night",
-      date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      location: "CholoSoy — Berlin",
-      imageUrl: "/images/events/opening.jpg",
-    },
-    create: {
-      title: "Opening Night",
-      slug: "opening-night",
-      date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      location: "CholoSoy — Berlin",
-      imageUrl: "/images/events/opening.jpg",
-    },
-  });
+  where: { slug: "opening-night" },
+  update: {
+    title: "Opening Night",
+    description: "A special opening event at CholoSoy in Berlin.",
+    date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    location: "CholoSoy — Berlin",
+    imageUrl: "/images/events/01.jpg",
+    status: "PUBLISHED",
+  },
+  create: {
+    title: "Opening Night",
+    slug: "opening-night",
+    description: "A special opening event at CholoSoy in Berlin.",
+    date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    location: "CholoSoy — Berlin",
+    imageUrl: "/images/events/01.jpg",
+    status: "PUBLISHED",
+  },
+});
 
   const menuItems = [
     // VORSPEISEN
@@ -247,24 +251,18 @@ async function main() {
     });
   }
 
+  const galleryImages = Array.from({ length: 36 }, (_, i) => {
+    const num = String(i + 1).padStart(2, "0");
+
+    return {
+      url: `/images/gallery/${num}.png`,
+      category: i % 3 === 0 ? "food" : i % 3 === 1 ? "restaurant" : "brand",
+      alt: `Galería CholoSoy ${num}`,
+    };
+  });
+
   await prisma.galleryImage.createMany({
-    data: [
-      {
-        url: "/images/gallery/01.png",
-        category: "food",
-        alt: "Plato peruano",
-      },
-      {
-        url: "/images/gallery/02.png",
-        category: "restaurant",
-        alt: "Interior del restaurante",
-      },
-      {
-        url: "/images/gallery/03.png",
-        category: "food",
-        alt: "Especialidad peruana",
-      },
-    ],
+    data: galleryImages,
     skipDuplicates: true,
   });
 
