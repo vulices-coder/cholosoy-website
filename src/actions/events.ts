@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { duplicateEventById } from "@/lib/queries/events";
 import { eventSchema } from "@/lib/validations/event";
 import { uploadEventImage } from "@/lib/supabase-storage";
+import { autoTranslateEvent } from "@/lib/ai/translate-event";
 
 export type CreateEventState = {
   success: boolean;
@@ -14,6 +15,14 @@ export type CreateEventState = {
 export type UpdateEventState = {
   success: boolean;
   error?: string;
+};
+
+type Locale = "de" | "es" | "en";
+
+type TranslationInput = {
+  locale: Locale;
+  title: string;
+  description: string;
 };
 
 function slugify(value: string) {
@@ -27,22 +36,45 @@ function slugify(value: string) {
     .replace(/-+/g, "-");
 }
 
-function getTranslationsFromFormData(formData: FormData) {
+function getTranslationsFromFormData(formData: FormData): TranslationInput[] {
   return ["de", "es", "en"].map((locale) => ({
-    locale: locale as "de" | "es" | "en",
+    locale: locale as Locale,
     title: String(formData.get(`title_${locale}`) || "").trim(),
     description: String(formData.get(`description_${locale}`) || "").trim(),
   }));
 }
 
-function cleanTranslations(
-  translations: Array<{
-    locale: "de" | "es" | "en";
-    title: string;
-    description: string;
-  }>
-) {
+function cleanTranslations(translations: TranslationInput[]) {
   return translations.filter((t) => t.title.length > 0);
+}
+
+function mergeAutoTranslations(params: {
+  manualTranslations: TranslationInput[];
+  autoTranslations: Record<
+    Locale,
+    {
+      title: string;
+      description: string;
+    }
+  >;
+}) {
+  const { manualTranslations, autoTranslations } = params;
+
+  const manualMap = new Map<Locale, TranslationInput>(
+    manualTranslations.map((t) => [t.locale, t])
+  );
+
+  const locales: Locale[] = ["de", "es", "en"];
+
+  return locales.map((locale) => {
+    const manual = manualMap.get(locale);
+
+    return {
+      locale,
+      title: manual?.title || autoTranslations[locale].title,
+      description: manual?.description || autoTranslations[locale].description,
+    };
+  });
 }
 
 export async function createEventAction(
@@ -50,17 +82,19 @@ export async function createEventAction(
   formData: FormData
 ): Promise<CreateEventState> {
   try {
-    const title = String(formData.get("title") || "");
-    const slugInput = String(formData.get("slug") || "");
-    const description = String(formData.get("description") || "");
-    const date = String(formData.get("date") || "");
-    const location = String(formData.get("location") || "");
+    const title = String(formData.get("title") || "").trim();
+    const slugInput = String(formData.get("slug") || "").trim();
+    const description = String(formData.get("description") || "").trim();
+    const date = String(formData.get("date") || "").trim();
+    const location = String(formData.get("location") || "").trim();
     const status = String(formData.get("status") || "DRAFT") as
       | "DRAFT"
       | "PUBLISHED"
       | "CANCELED";
 
-    const translations = cleanTranslations(getTranslationsFromFormData(formData));
+    const manualTranslations = cleanTranslations(
+      getTranslationsFromFormData(formData)
+    );
 
     const fileEntry = formData.get("image");
     let imageUrl = "";
@@ -69,6 +103,16 @@ export async function createEventAction(
       const uploaded = await uploadEventImage(fileEntry);
       imageUrl = uploaded.publicUrl;
     }
+
+    const autoTranslations = await autoTranslateEvent({
+      baseTitle: title,
+      baseDescription: description,
+    });
+
+    const translations = mergeAutoTranslations({
+      manualTranslations,
+      autoTranslations,
+    });
 
     const raw = {
       title,
@@ -131,17 +175,19 @@ export async function updateEventAction(
   formData: FormData
 ): Promise<UpdateEventState> {
   try {
-    const title = String(formData.get("title") || "");
-    const slugInput = String(formData.get("slug") || "");
-    const description = String(formData.get("description") || "");
-    const date = String(formData.get("date") || "");
-    const location = String(formData.get("location") || "");
+    const title = String(formData.get("title") || "").trim();
+    const slugInput = String(formData.get("slug") || "").trim();
+    const description = String(formData.get("description") || "").trim();
+    const date = String(formData.get("date") || "").trim();
+    const location = String(formData.get("location") || "").trim();
     const status = String(formData.get("status") || "DRAFT") as
       | "DRAFT"
       | "PUBLISHED"
       | "CANCELED";
 
-    const translations = cleanTranslations(getTranslationsFromFormData(formData));
+    const manualTranslations = cleanTranslations(
+      getTranslationsFromFormData(formData)
+    );
 
     const currentEvent = await prisma.event.findUnique({
       where: { id: eventId },
@@ -161,6 +207,16 @@ export async function updateEventAction(
       const uploaded = await uploadEventImage(fileEntry);
       imageUrl = uploaded.publicUrl;
     }
+
+    const autoTranslations = await autoTranslateEvent({
+      baseTitle: title,
+      baseDescription: description,
+    });
+
+    const translations = mergeAutoTranslations({
+      manualTranslations,
+      autoTranslations,
+    });
 
     const raw = {
       title,

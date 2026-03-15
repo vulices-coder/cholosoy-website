@@ -102,21 +102,6 @@ export default function EditEventForm({ event }: { event: EventData }) {
     setDescriptionEn(description);
   }
 
-  function copyBaseToDe() {
-    setTitleDe(title);
-    setDescriptionDe(description);
-  }
-
-  function copyBaseToEs() {
-    setTitleEs(title);
-    setDescriptionEs(description);
-  }
-
-  function copyBaseToEn() {
-    setTitleEn(title);
-    setDescriptionEn(description);
-  }
-
   const currentImage = previewUrl || event.imageUrl || null;
 
   return (
@@ -163,10 +148,7 @@ export default function EditEventForm({ event }: { event: EventData }) {
         />
       </div>
 
-      <div
-        className={styles.field}
-        style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
-      >
+      <div className={styles.field}>
         <button
           type="button"
           onClick={copyBaseToAll}
@@ -174,33 +156,6 @@ export default function EditEventForm({ event }: { event: EventData }) {
           style={{ width: "auto", padding: "10px 14px" }}
         >
           Copiar base → todos
-        </button>
-
-        <button
-          type="button"
-          onClick={copyBaseToDe}
-          className={styles.button}
-          style={{ width: "auto", padding: "10px 14px" }}
-        >
-          Copiar → DE
-        </button>
-
-        <button
-          type="button"
-          onClick={copyBaseToEs}
-          className={styles.button}
-          style={{ width: "auto", padding: "10px 14px" }}
-        >
-          Copiar → ES
-        </button>
-
-        <button
-          type="button"
-          onClick={copyBaseToEn}
-          className={styles.button}
-          style={{ width: "auto", padding: "10px 14px" }}
-        >
-          Copiar → EN
         </button>
       </div>
 
@@ -352,11 +307,11 @@ export default function EditEventForm({ event }: { event: EventData }) {
       {state.error ? <p className={styles.error}>{state.error}</p> : null}
 
       {state.success ? (
-        <p className={styles.success}>Evento actualizado correctamente.</p>
+        <p className={styles.success}>Evento actualizado y traducido correctamente.</p>
       ) : null}
 
       <button type="submit" disabled={pending} className={styles.button}>
-        {pending ? "Guardando..." : "Actualizar evento"}
+        {pending ? "Traduciendo y guardando..." : "Actualizar evento"}
       </button>
     </form>
   );

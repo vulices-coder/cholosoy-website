@@ -42,7 +42,6 @@ export default function EventCreateForm() {
       setSlugTouched(false);
       setDescription("");
       setSelectedFile(null);
-
       setTitleDe("");
       setDescriptionDe("");
       setTitleEs("");
@@ -90,21 +89,6 @@ export default function EventCreateForm() {
     setDescriptionDe(description);
     setTitleEs(title);
     setDescriptionEs(description);
-    setTitleEn(title);
-    setDescriptionEn(description);
-  }
-
-  function copyBaseToDe() {
-    setTitleDe(title);
-    setDescriptionDe(description);
-  }
-
-  function copyBaseToEs() {
-    setTitleEs(title);
-    setDescriptionEs(description);
-  }
-
-  function copyBaseToEn() {
     setTitleEn(title);
     setDescriptionEn(description);
   }
@@ -160,10 +144,7 @@ export default function EventCreateForm() {
         />
       </div>
 
-      <div
-        className={styles.field}
-        style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
-      >
+      <div className={styles.field}>
         <button
           type="button"
           onClick={copyBaseToAll}
@@ -171,33 +152,6 @@ export default function EventCreateForm() {
           style={{ width: "auto", padding: "10px 14px" }}
         >
           Copiar base → todos
-        </button>
-
-        <button
-          type="button"
-          onClick={copyBaseToDe}
-          className={styles.button}
-          style={{ width: "auto", padding: "10px 14px" }}
-        >
-          Copiar → DE
-        </button>
-
-        <button
-          type="button"
-          onClick={copyBaseToEs}
-          className={styles.button}
-          style={{ width: "auto", padding: "10px 14px" }}
-        >
-          Copiar → ES
-        </button>
-
-        <button
-          type="button"
-          onClick={copyBaseToEn}
-          className={styles.button}
-          style={{ width: "auto", padding: "10px 14px" }}
-        >
-          Copiar → EN
         </button>
       </div>
 
@@ -209,7 +163,7 @@ export default function EventCreateForm() {
           value={titleDe}
           onChange={(e) => setTitleDe(e.target.value)}
           className={styles.input}
-          placeholder="Titel auf Deutsch"
+          placeholder="Se autocompleta o se puede editar"
         />
       </div>
 
@@ -221,7 +175,7 @@ export default function EventCreateForm() {
           value={descriptionDe}
           onChange={(e) => setDescriptionDe(e.target.value)}
           className={styles.textarea}
-          placeholder="Beschreibung auf Deutsch"
+          placeholder="Se autocompleta o se puede editar"
         />
       </div>
 
@@ -233,7 +187,7 @@ export default function EventCreateForm() {
           value={titleEs}
           onChange={(e) => setTitleEs(e.target.value)}
           className={styles.input}
-          placeholder="Título en español"
+          placeholder="Se autocompleta o se puede editar"
         />
       </div>
 
@@ -245,7 +199,7 @@ export default function EventCreateForm() {
           value={descriptionEs}
           onChange={(e) => setDescriptionEs(e.target.value)}
           className={styles.textarea}
-          placeholder="Descripción en español"
+          placeholder="Se autocompleta o se puede editar"
         />
       </div>
 
@@ -257,7 +211,7 @@ export default function EventCreateForm() {
           value={titleEn}
           onChange={(e) => setTitleEn(e.target.value)}
           className={styles.input}
-          placeholder="Title in English"
+          placeholder="Will be auto-generated or can be edited"
         />
       </div>
 
@@ -269,7 +223,7 @@ export default function EventCreateForm() {
           value={descriptionEn}
           onChange={(e) => setDescriptionEn(e.target.value)}
           className={styles.textarea}
-          placeholder="Description in English"
+          placeholder="Will be auto-generated or can be edited"
         />
       </div>
 
@@ -353,11 +307,11 @@ export default function EventCreateForm() {
       {state.error ? <p className={styles.error}>{state.error}</p> : null}
 
       {state.success ? (
-        <p className={styles.success}>Evento creado correctamente.</p>
+        <p className={styles.success}>Evento creado y traducido correctamente.</p>
       ) : null}
 
       <button type="submit" disabled={pending} className={styles.button}>
-        {pending ? "Guardando..." : "Crear evento"}
+        {pending ? "Traduciendo y guardando..." : "Crear evento"}
       </button>
     </form>
   );
