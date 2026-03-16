@@ -18,15 +18,6 @@
   align-items: stretch;
 }
 
-.cardTop {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1.2 / 1;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #e9e9e9;
-}
-
 .rowBottom {
   display: grid;
   grid-template-columns: 1.22fr 0.92fr 1.28fr;
@@ -34,14 +25,27 @@
   align-items: stretch;
 }
 
-.cardBeach,
-.cardPisco,
-.cardPeople {
+.imageButton {
   position: relative;
   width: 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
   border-radius: 18px;
   overflow: hidden;
   background: #e9e9e9;
+  cursor: pointer;
+  display: block;
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease;
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.cardTop {
+  aspect-ratio: 1.2 / 1;
 }
 
 .cardBeach {
@@ -59,6 +63,122 @@
 .image {
   object-fit: cover;
   object-position: center;
+  transition: transform 360ms ease;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.05) 38%,
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity 240ms ease;
+  pointer-events: none;
+}
+
+.imageButton:hover {
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.14),
+    0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.imageButton:hover .image {
+  transform: scale(1.06);
+}
+
+.imageButton:hover .overlay {
+  opacity: 1;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.lightboxContent {
+  position: relative;
+  width: min(92vw, 1280px);
+  height: min(84vh, 860px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightboxMedia {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.lightboxImage {
+  object-fit: contain;
+  object-position: center;
+}
+
+.lightboxButton {
+  position: absolute;
+  z-index: 320;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 32px;
+  line-height: 1;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+  backdrop-filter: blur(6px);
+}
+
+.lightboxButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.04);
+}
+
+.closeButton {
+  top: 24px;
+  right: 24px;
+  font-size: 36px;
+}
+
+.prevButton {
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nextButton {
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.prevButton:hover,
+.nextButton:hover {
+  transform: translateY(-50%) scale(1.04);
 }
 
 @media (min-width: 1600px) {
@@ -72,10 +192,7 @@
     gap: 14px;
   }
 
-  .cardTop,
-  .cardBeach,
-  .cardPisco,
-  .cardPeople {
+  .imageButton {
     border-radius: 20px;
   }
 }
@@ -91,10 +208,7 @@
     gap: 10px;
   }
 
-  .cardTop,
-  .cardBeach,
-  .cardPisco,
-  .cardPeople {
+  .imageButton {
     border-radius: 16px;
   }
 
@@ -126,10 +240,7 @@
     gap: 6px;
   }
 
-  .cardTop,
-  .cardBeach,
-  .cardPisco,
-  .cardPeople {
+  .imageButton {
     border-radius: 14px;
   }
 
@@ -176,6 +287,34 @@
   .cardPisco {
     aspect-ratio: 1.55 / 1;
   }
+
+  .lightbox {
+    padding: 20px;
+  }
+
+  .lightboxContent {
+    width: min(94vw, 960px);
+    height: min(76vh, 680px);
+  }
+
+  .lightboxButton {
+    width: 46px;
+    height: 46px;
+    font-size: 28px;
+  }
+
+  .closeButton {
+    top: 16px;
+    right: 16px;
+  }
+
+  .prevButton {
+    left: 12px;
+  }
+
+  .nextButton {
+    right: 12px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -189,15 +328,44 @@
     gap: 10px;
   }
 
-  .cardTop,
-  .cardBeach,
-  .cardPisco,
-  .cardPeople {
+  .imageButton {
     aspect-ratio: 1.45 / 1;
     border-radius: 16px;
   }
 
   .cardPeople {
     grid-column: auto;
+  }
+
+  .lightbox {
+    padding: 12px;
+  }
+
+  .lightboxContent {
+    width: 100%;
+    height: min(72vh, 560px);
+  }
+
+  .lightboxMedia {
+    border-radius: 18px;
+  }
+
+  .lightboxButton {
+    width: 42px;
+    height: 42px;
+    font-size: 24px;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+  }
+
+  .prevButton {
+    left: 8px;
+  }
+
+  .nextButton {
+    right: 8px;
   }
 }
