@@ -34,22 +34,34 @@ const GALLERY_DICT: Record<
     title: string;
     subtitle: string;
     ariaLabel: string;
+    closeLabel: string;
+    prevLabel: string;
+    nextLabel: string;
   }
 > = {
   de: {
     title: "Galerie",
     subtitle: "Aromen, Farben und Momente von CholoSoy",
     ariaLabel: "Galerie Bilder",
+    closeLabel: "Schließen",
+    prevLabel: "Vorheriges Bild",
+    nextLabel: "Nächstes Bild",
   },
   es: {
     title: "Galería",
     subtitle: "Sabores, colores y momentos de CholoSoy",
     ariaLabel: "Imágenes de la galería",
+    closeLabel: "Cerrar",
+    prevLabel: "Imagen anterior",
+    nextLabel: "Imagen siguiente",
   },
   en: {
     title: "Gallery",
     subtitle: "Flavors, colors and moments of CholoSoy",
     ariaLabel: "Gallery images",
+    closeLabel: "Close",
+    prevLabel: "Previous image",
+    nextLabel: "Next image",
   },
 };
 
@@ -68,6 +80,7 @@ export default function GalleryRail({ images }: GalleryRailProps) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isCompactLayout, setIsCompactLayout] = useState(false);
 
   const DRAG_THRESHOLD = 8;
@@ -106,6 +119,39 @@ export default function GalleryRail({ images }: GalleryRailProps) {
       rail.removeEventListener("wheel", handleWheel);
     };
   }, [isCompactLayout]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setLightboxIndex(null);
+        return;
+      }
+
+      if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => {
+          if (prev === null) return prev;
+          return prev === 0 ? images.length - 1 : prev - 1;
+        });
+      }
+
+      if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => {
+          if (prev === null) return prev;
+          return prev === images.length - 1 ? 0 : prev + 1;
+        });
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lightboxIndex, images.length]);
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isCompactLayout) return;
@@ -194,75 +240,160 @@ export default function GalleryRail({ images }: GalleryRailProps) {
     });
   };
 
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+  };
+
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+  };
+
+  const showPrev = () => {
+    setLightboxIndex((prev) => {
+      if (prev === null) return prev;
+      return prev === 0 ? images.length - 1 : prev - 1;
+    });
+  };
+
+  const showNext = () => {
+    setLightboxIndex((prev) => {
+      if (prev === null) return prev;
+      return prev === images.length - 1 ? 0 : prev + 1;
+    });
+  };
+
   const handleCardClick = (index: number) => {
     if (dragStartedRef.current) return;
 
-    setActiveIndex((prev) => {
-      const next = prev === index ? null : index;
+    if (activeIndex === index) {
+      openLightbox(index);
+      return;
+    }
 
-      if (next !== null) {
-        requestAnimationFrame(() => {
-          if (isCompactLayout) {
-            centerCardCompact(next);
-          } else {
-            centerCardDesktop(next);
-          }
-        });
+    setActiveIndex(index);
+
+    requestAnimationFrame(() => {
+      if (isCompactLayout) {
+        centerCardCompact(index);
+      } else {
+        centerCardDesktop(index);
       }
-
-      return next;
     });
   };
 
   return (
-    <section
-      ref={sectionRef}
-      className={styles.section}
-      onMouseMove={handleSectionMouseMove}
-      onMouseLeave={handleSectionMouseLeave}
-    >
-      <Container size="lg">
-        <div className={styles.stage}>
-          <header className={styles.header}>
-            <h1 className={styles.title}>{t.title}</h1>
-            <p className={styles.subtitle}>{t.subtitle}</p>
-          </header>
+    <>
+      <section
+        ref={sectionRef}
+        className={styles.section}
+        onMouseMove={handleSectionMouseMove}
+        onMouseLeave={handleSectionMouseLeave}
+      >
+        <Container size="lg">
+          <div className={styles.stage}>
+            <header className={styles.header}>
+              <h1 className={styles.title}>{t.title}</h1>
+              <p className={styles.subtitle}>{t.subtitle}</p>
+            </header>
+
+            <div
+              ref={railRef}
+              className={`${styles.rail} ${isDragging ? styles.dragging : ""}`}
+              aria-label={t.ariaLabel}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={endDrag}
+              onPointerLeave={endDrag}
+              onPointerCancel={endDrag}
+            >
+              {images.map((img, index) => {
+                const isActive = activeIndex === index;
+
+                return (
+                  <figure
+                    key={img.id}
+                    className={styles.card}
+                    data-active={isActive ? "true" : "false"}
+                    onClick={() => handleCardClick(index)}
+                  >
+                    <Image
+                      src={img.url}
+                      alt={img.alt}
+                      fill
+                      className={styles.image}
+                      sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 24vw"
+                      draggable={false}
+                      loading={index < 4 ? "eager" : "lazy"}
+                    />
+                  </figure>
+                );
+              })}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {lightboxIndex !== null && (
+        <div
+          className={styles.lightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={images[lightboxIndex]?.alt}
+          onClick={closeLightbox}
+        >
+          <button
+            type="button"
+            className={`${styles.lightboxButton} ${styles.closeButton}`}
+            aria-label={t.closeLabel}
+            onClick={(e) => {
+              e.stopPropagation();
+              closeLightbox();
+            }}
+          >
+            ×
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.lightboxButton} ${styles.prevButton}`}
+            aria-label={t.prevLabel}
+            onClick={(e) => {
+              e.stopPropagation();
+              showPrev();
+            }}
+          >
+            ‹
+          </button>
 
           <div
-            ref={railRef}
-            className={`${styles.rail} ${isDragging ? styles.dragging : ""}`}
-            aria-label={t.ariaLabel}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={endDrag}
-            onPointerLeave={endDrag}
-            onPointerCancel={endDrag}
+            className={styles.lightboxContent}
+            onClick={(e) => e.stopPropagation()}
           >
-            {images.map((img, index) => {
-              const isActive = activeIndex === index;
-
-              return (
-                <figure
-                  key={img.id}
-                  className={styles.card}
-                  data-active={isActive ? "true" : "false"}
-                  onClick={() => handleCardClick(index)}
-                >
-                  <Image
-                    src={img.url}
-                    alt={img.alt}
-                    fill
-                    className={styles.image}
-                    sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 24vw"
-                    draggable={false}
-                    loading={index < 4 ? "eager" : "lazy"}
-                  />
-                </figure>
-              );
-            })}
+            <div className={styles.lightboxMedia}>
+              <Image
+                src={images[lightboxIndex].url}
+                alt={images[lightboxIndex].alt}
+                fill
+                className={styles.lightboxImage}
+                sizes="100vw"
+                priority
+              />
+            </div>
           </div>
+
+          <button
+            type="button"
+            className={`${styles.lightboxButton} ${styles.nextButton}`}
+            aria-label={t.nextLabel}
+            onClick={(e) => {
+              e.stopPropagation();
+              showNext();
+            }}
+          >
+            ›
+          </button>
         </div>
-      </Container>
-    </section>
+      )}
+    </>
   );
 }
