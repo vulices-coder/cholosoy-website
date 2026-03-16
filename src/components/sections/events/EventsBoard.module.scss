@@ -41,11 +41,15 @@
   border-radius: 16px;
   overflow: hidden;
   background: #eee;
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
 }
 
 .image {
   object-fit: cover;
   object-position: center;
+  transition: transform 260ms ease;
 }
 
 .body {
@@ -55,6 +59,9 @@
   align-items: center;
   border-radius: 16px;
   min-height: 210px;
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
 }
 
 .text {
@@ -80,6 +87,9 @@
   align-items: center;
   justify-content: center;
   padding: 12px;
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms ease;
 }
 
 .date {
@@ -89,6 +99,25 @@
   line-height: 1.2;
   text-align: center;
   color: var(--color-white);
+}
+
+/* HOVERS INDIVIDUALES */
+.media:hover {
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.12);
+}
+
+.media:hover .image {
+  transform: scale(1.05);
+}
+
+.body:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.dateBox:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.10);
+  transform: scale(1.03);
 }
 
 /* LARGE DESKTOP */
@@ -228,6 +257,14 @@
   .date {
     font-size: 20px;
   }
+
+  .body:hover {
+    transform: translateY(-1px);
+  }
+
+  .dateBox:hover {
+    transform: scale(1.02);
+  }
 }
 
 /* MOBILE */
@@ -271,5 +308,17 @@
 
   .date {
     font-size: 18px;
+  }
+
+  .media:hover .image {
+    transform: scale(1.03);
+  }
+
+  .body:hover {
+    transform: none;
+  }
+
+  .dateBox:hover {
+    transform: scale(1.01);
   }
 }
