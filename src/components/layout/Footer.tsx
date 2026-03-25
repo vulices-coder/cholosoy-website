@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import styles from "./Footer.module.scss";
 
 type Locale = "de" | "es" | "en";
@@ -84,7 +85,7 @@ export default function Footer() {
       <div className={styles.footerInner}>
         <div className={styles.brand}>{t.brand}</div>
 
-        <nav className={styles.legal}>
+        <nav className={styles.legal} aria-label="Footer navigation">
           <Link href={`/${locale}/agb`}>{t.agb}</Link>
           <Link href={`/${locale}/datenschutz`}>{t.datenschutz}</Link>
           <Link href={`/${locale}/info`}>{t.info}</Link>
@@ -93,10 +94,10 @@ export default function Footer() {
 
         <div className={styles.social}>
           <a href="#" aria-label={t.facebook}>
-            {t.facebook}
+            <FaFacebookF />
           </a>
           <a href="#" aria-label={t.instagram}>
-            {t.instagram}
+            <FaInstagram />
           </a>
         </div>
       </div>
