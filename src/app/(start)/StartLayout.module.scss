@@ -1,0 +1,26 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-footer-bg);
+  position: relative;
+}
+
+.shell::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -40px;
+  height: 60px;
+  background: var(--color-footer-bg);
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.footerSlot {
+  flex-shrink: 0;
+  background: var(--color-footer-bg);
+}

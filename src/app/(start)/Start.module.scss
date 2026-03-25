@@ -1,5 +1,5 @@
 .page {
-  background: transparent;
+  background: var(--color-footer-bg);
   margin: 0;
   padding: 0;
 }
@@ -14,6 +14,24 @@
 .startShell {
   width: 100%;
   margin: 0 auto;
+}
+
+.heroFrame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  aspect-ratio: 1440 / 926;
+  min-height: 420px;
+}
+
+.sectionFrame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  aspect-ratio: 2048 / 1292;
+  min-height: 260px;
 }
 
 @media (min-width: 1700px) {
@@ -186,8 +204,18 @@
 
   .heroLink,
   .heroLinkDisabled {
-    font-size: clamp(18px, 5vw, 24px);
+    font-size: clamp(18px, 5vw, 24px);  
   }
+
+  @media (max-width: 700px) {
+  .heroFrame {
+    min-height: 380px;
+  }
+
+  .sectionFrame {
+    min-height: 220px;
+  }
+}
 
   .flags {
     left: 16px;
