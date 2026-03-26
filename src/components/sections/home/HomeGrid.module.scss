@@ -20,7 +20,7 @@
 
 .rowBottom {
   display: grid;
-  grid-template-columns: 1.22fr 0.92fr 1.28fr;
+  grid-template-columns: 1.12fr 1fr 1.12fr;
   gap: 12px;
   align-items: stretch;
 }
@@ -44,25 +44,17 @@
     0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.cardTop {
-  aspect-ratio: 1.2 / 1;
-}
-
-.cardBeach {
-  aspect-ratio: 1.76 / 1;
-}
-
-.cardPisco {
-  aspect-ratio: 1.38 / 1;
-}
-
+/* DESKTOP BASE: más altura, menos recorte */
+.cardTop,
+.cardBeach,
+.cardPisco,
 .cardPeople {
-  aspect-ratio: 1.56 / 1;
+  aspect-ratio: 5 / 4;
 }
 
 .image {
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   transition: transform 360ms ease;
 }
 
@@ -181,6 +173,7 @@
   transform: translateY(-50%) scale(1.04);
 }
 
+/* LARGE DESKTOP */
 @media (min-width: 1600px) {
   .wrapper {
     max-width: 1440px;
@@ -195,8 +188,16 @@
   .imageButton {
     border-radius: 20px;
   }
+
+  .cardTop,
+  .cardBeach,
+  .cardPisco,
+  .cardPeople {
+    aspect-ratio: 6 / 5;
+  }
 }
 
+/* MEDIUM DESKTOP / LAPTOP */
 @media (max-width: 1512px) {
   .wrapper {
     max-width: 1200px;
@@ -212,55 +213,39 @@
     border-radius: 16px;
   }
 
-  .cardTop {
-    aspect-ratio: 1.14 / 1;
-  }
-
-  .cardBeach {
-    aspect-ratio: 1.66 / 1;
-  }
-
-  .cardPisco {
-    aspect-ratio: 1.28 / 1;
-  }
-
+  .cardTop,
+  .cardBeach,
+  .cardPisco,
   .cardPeople {
-    aspect-ratio: 1.46 / 1;
+    aspect-ratio: 5 / 4;
   }
 }
 
+/* HALF LARGE SCREEN / MACBOOK */
 @media (max-width: 1512px) and (max-height: 1000px) {
   .wrapper {
     max-width: 1000px;
-    gap: 6px;
+    gap: 8px;
   }
 
   .rowTop,
   .rowBottom {
-    gap: 6px;
+    gap: 8px;
   }
 
   .imageButton {
     border-radius: 14px;
   }
 
-  .cardTop {
-    aspect-ratio: 1 / 1;
-  }
-
-  .cardBeach {
-    aspect-ratio: 1.42 / 1;
-  }
-
-  .cardPisco {
-    aspect-ratio: 1.12 / 1;
-  }
-
+  .cardTop,
+  .cardBeach,
+  .cardPisco,
   .cardPeople {
-    aspect-ratio: 1.24 / 1;
+    aspect-ratio: 4 / 3;
   }
 }
 
+/* TABLET */
 @media (max-width: 1100px) {
   .wrapper {
     max-width: 920px;
@@ -279,13 +264,13 @@
 
   .cardPeople {
     grid-column: 1 / -1;
-    aspect-ratio: 2 / 1;
+    aspect-ratio: 16 / 10;
   }
 
   .cardTop,
   .cardBeach,
   .cardPisco {
-    aspect-ratio: 1.55 / 1;
+    aspect-ratio: 4 / 3;
   }
 
   .lightbox {
@@ -317,6 +302,7 @@
   }
 }
 
+/* MOBILE */
 @media (max-width: 700px) {
   .wrapper {
     gap: 10px;
@@ -329,8 +315,12 @@
   }
 
   .imageButton {
-    aspect-ratio: 1.45 / 1;
+    aspect-ratio: 4 / 3;
     border-radius: 16px;
+  }
+
+  .image {
+    object-position: center top;
   }
 
   .cardPeople {

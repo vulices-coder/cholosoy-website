@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Container from "@/components/ui/Container";
 import styles from "./Navbar.module.scss";
 
@@ -61,6 +62,31 @@ export default function Navbar() {
   const locale = getLocaleFromPath(pathname);
   const t = NAV_DICT[locale];
 
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+  function handleScroll() {
+    const currentY = window.scrollY;
+    const delta = currentY - lastScrollY.current;
+
+    if (currentY < 40) {
+      setIsVisible(true);
+    } else if (delta > 6) {
+      setIsVisible(false);
+    } else if (delta < -6) {
+      setIsVisible(true);
+    }
+
+    lastScrollY.current = currentY;
+  }
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  handleScroll();
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
   const withLocale = (path: string) => `/${locale}${path}`;
 
   const homeHref = withLocale("/home");
@@ -78,7 +104,7 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className={styles.nav}>
+    <header className={`${styles.nav} ${isVisible ? styles.navVisible : styles.navHidden}`}>
       <Container size="lg">
         <div className={styles.navInner}>
           <Link className={styles.logo} href={logoHref} aria-label={t.logo}>

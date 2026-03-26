@@ -8,10 +8,12 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className={styles.shell}>
+    <>
       <Navbar />
-      <main className={styles.main}>{children}</main>
+      <div className={styles.pageOffset}>
+        {children}
+      </div>
       <Footer />
-    </div>
+    </>
   );
 }

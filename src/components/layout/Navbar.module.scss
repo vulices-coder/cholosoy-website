@@ -1,6 +1,25 @@
 .nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   width: 100%;
   background: var(--color-accent);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 240ms ease,
+    opacity 240ms ease;
+  will-change: transform;
+}
+
+.navVisible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.navHidden {
+  transform: translateY(-100%);
+  opacity: 0.98;
 }
 
 .navInner {
